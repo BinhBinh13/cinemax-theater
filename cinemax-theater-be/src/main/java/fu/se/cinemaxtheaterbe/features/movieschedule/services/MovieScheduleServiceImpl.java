@@ -5,8 +5,6 @@ import fu.se.cinemaxtheaterbe.entity.enums.MovieScheduleStatus;
 import fu.se.cinemaxtheaterbe.entity.enums.RoomStatus;
 import fu.se.cinemaxtheaterbe.entity.theater.Room;
 import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
-import fu.se.cinemaxtheaterbe.exception.BusinessRuleException;
-import fu.se.cinemaxtheaterbe.exception.ResourceNotFoundException;
 import fu.se.cinemaxtheaterbe.features.movie.repositories.MovieRepository;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleRequest;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleResponse;
@@ -14,8 +12,10 @@ import fu.se.cinemaxtheaterbe.features.movieschedule.mappers.ScheduleMapper;
 import fu.se.cinemaxtheaterbe.features.movieschedule.repositories.MovieScheduleRepository;
 import fu.se.cinemaxtheaterbe.features.room.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -110,7 +110,7 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
 
     private void validateUpcoming(Schedule schedule) {
         if (schedule.getStatus() != MovieScheduleStatus.UPCOMING) {
-            throw new BusinessRuleException("Only upcoming schedules can be updated or deleted");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Only upcoming schedules can be updated or deleted");
         }
     }
 
@@ -135,26 +135,26 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
 
     private LocalDateTime computeEndTime(Movie movie, LocalDateTime startTime) {
         if (movie.getDurationMinutes() == null) {
-            throw new BusinessRuleException("Movie duration is not set, cannot compute schedule end time");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Movie duration is not set, cannot compute schedule end time");
         }
         return startTime.plusMinutes(movie.getDurationMinutes());
     }
 
     private void validateScreeningWindow(Movie movie, LocalDate date) {
         if (date.isBefore(LocalDate.now())) {
-            throw new BusinessRuleException("Schedule date cannot be in the past");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule date cannot be in the past");
         }
         if (movie.getReleaseDate() != null && date.isBefore(movie.getReleaseDate())) {
-            throw new BusinessRuleException("Schedule date is before the movie's release date");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule date is before the movie's release date");
         }
         if (movie.getEndDate() != null && date.isAfter(movie.getEndDate())) {
-            throw new BusinessRuleException("Schedule date is after the movie's screening end date");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule date is after the movie's screening end date");
         }
     }
 
     private void validateRoomActive(Room room) {
         if (room.getStatus() != RoomStatus.ACTIVE) {
-            throw new BusinessRuleException("Room is not active");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Room is not active");
         }
     }
 
@@ -165,22 +165,22 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
         List<Schedule> conflicts = scheduleRepository.findConflictingSchedules(
                 roomId, checkStart, checkEnd, excludeId);
         if (!conflicts.isEmpty()) {
-            throw new BusinessRuleException("Room already has a schedule overlapping this time slot");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Room already has a schedule overlapping this time slot");
         }
     }
 
     private Schedule findScheduleOrThrow(Long id) {
         return scheduleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found: " + id));
     }
 
     private Movie findMovieOrThrow(Long id) {
         return movieRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found: " + id));
     }
 
     private Room findRoomOrThrow(Long id) {
         return roomRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room not found: " + id));
     }
 }

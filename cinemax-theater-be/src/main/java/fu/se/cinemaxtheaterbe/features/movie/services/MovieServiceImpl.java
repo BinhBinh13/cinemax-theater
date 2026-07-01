@@ -1,11 +1,12 @@
 package fu.se.cinemaxtheaterbe.features.movie.services;
 
-import fu.se.cinemaxtheaterbe.exception.ResourceNotFoundException;
 import fu.se.cinemaxtheaterbe.features.movie.dtos.MovieResponse;
 import fu.se.cinemaxtheaterbe.features.movie.mappers.MovieMapper;
 import fu.se.cinemaxtheaterbe.features.movie.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -27,6 +28,6 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse getMovieById(Long id) {
         return movieRepository.findById(id)
                 .map(movieMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found: " + id));
     }
 }
