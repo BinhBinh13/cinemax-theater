@@ -1,6 +1,7 @@
 package fu.se.cinemaxtheaterbe.entity.enums;
 
 public enum MovieStatus {
-    ACTIVE,
-    INACTIVE
+    COMING_SOON,
+    NOW_SHOWING,
+    ENDED
 }

@@ -4,10 +4,7 @@ export const BASE_URL = "http://localhost:8080";
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 5000,
+  timeout: 30000,
 });
 
 axiosClient.interceptors.request.use((config) => {

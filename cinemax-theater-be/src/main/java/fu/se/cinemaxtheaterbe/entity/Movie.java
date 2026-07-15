@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,9 +47,34 @@ public class Movie extends Auditable {
 
     @Column(name = "end_date")
     private LocalDate endDate;
-    /** ACTIVE / INACTIVE. */
+
+    @Column(name = "language", length = 50)
+    private String language;
+
+    @Column(name = "director", length = 255)
+    private String director;
+
+    @Column(name = "cast_actors", columnDefinition = "NVARCHAR(MAX)")
+    private String cast;
+
+    @Column(name = "rating")
+    private Double rating;
+
+    @Column(name = "banner_url", length = 500)
+    private String bannerUrl;
+
+    @Column(name = "trailer_url", length = 500)
+    private String trailerUrl;
+
     @Enumerated(EnumType.STRING)
     private MovieStatus status;
+
+    @ManyToMany
+    @JoinTable(name = "movie_genres",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "genre_id"))
+    @Builder.Default
+    private List<Genre> genres = new ArrayList<>();
 
     @OneToMany(mappedBy = "movie")
     @Builder.Default

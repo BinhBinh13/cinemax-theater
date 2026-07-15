@@ -26,6 +26,11 @@ export async function getMovieById(movieId) {
   return toMovieViewModel(response.data)
 }
 
+export async function getMovieRaw(movieId) {
+  const response = await axiosClient.get(`/api/v1/movies/${movieId}`)
+  return response.data
+}
+
 
 export function getScheduleByMovieId(movieId) {
   return axiosClient.get('/api/v1/schedules', { params: { movieId } })
@@ -45,4 +50,17 @@ export function updateSchedule(scheduleId, payload) {
 
 export function deleteSchedule(scheduleId) {
   return axiosClient.delete(`/api/v1/schedules/${scheduleId}`)
+}
+
+
+export function createMovie(payload) {
+  return axiosClient.post('/api/v1/movies', payload)
+}
+
+export function updateMovie(movieId, payload) {
+  return axiosClient.put(`/api/v1/movies/${movieId}`, payload)
+}
+
+export function deleteMovie(movieId) {
+  return axiosClient.delete(`/api/v1/movies/${movieId}`)
 }
