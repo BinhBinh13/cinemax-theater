@@ -44,7 +44,7 @@ public class Room extends Auditable {
     @JoinColumn(name = "theater_id", referencedColumnName = "theater_id")
     private Theater theater;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Seat> seats = new HashSet<>();
 

@@ -1,7 +1,9 @@
 package fu.se.cinemaxtheaterbe.config;
 
 import fu.se.cinemaxtheaterbe.entity.Genre;
+import fu.se.cinemaxtheaterbe.entity.theater.Theater;
 import fu.se.cinemaxtheaterbe.features.genre.repositories.GenreRepository;
+import fu.se.cinemaxtheaterbe.features.theater.repositories.TheaterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -15,9 +17,15 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final GenreRepository genreRepository;
+    private final TheaterRepository theaterRepository;
 
     @Override
     public void run(String... args) {
+        seedGenres();
+        seedTheater();
+    }
+
+    private void seedGenres() {
         if (genreRepository.count() > 0) {
             log.info("Genres already seeded, skipping.");
             return;
@@ -46,5 +54,22 @@ public class DataInitializer implements CommandLineRunner {
 
         genreRepository.saveAll(genres);
         log.info("Seeded {} genres.", genres.size());
+    }
+
+    private void seedTheater() {
+        if (theaterRepository.count() > 0) {
+            log.info("Theater already seeded, skipping.");
+            return;
+        }
+
+        Theater theater = Theater.builder()
+                .name("Cinemax Theater")
+                .address("123 Main Street, City Center")
+                .hotline("1900-1234")
+                .description("Premium cinema experience")
+                .build();
+
+        theaterRepository.save(theater);
+        log.info("Seeded theater: {}", theater.getName());
     }
 }

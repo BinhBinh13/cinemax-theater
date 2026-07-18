@@ -5,4 +5,5 @@ public class ApiPath {
     public static final String SCHEDULES = BASE + "/schedules";
     public static final String MOVIES = BASE + "/movies";
     public static final String FOOD_DRINKS = BASE + "/food-drinks";
+    public static final String ROOMS = BASE + "/rooms";
 }
