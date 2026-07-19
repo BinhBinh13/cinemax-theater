@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Alert } from "react-bootstrap";
 import StaffSideBar from "../components/StaffSideBar";
 import MovieFiltersBar from "../components/MovieFiltersBar";
 import MovieGrid from "../components/MovieGrid";
@@ -44,12 +45,16 @@ export default function ViewListOfScreeningMovies() {
       <StaffSideBar />
       <main className="flex-grow-1 p-4">
         <h4 className="fw-normal mb-4">Movie list</h4>
+        {error && (
+          <Alert variant="danger" onClose={() => setError("")} dismissible>
+            {error}
+          </Alert>
+        )}
         <MovieFiltersBar
           draftSearchText={draftSearchText}
           onDraftSearchTextChange={setDraftSearchText}
           onSearchClick={handleSearch}
         />
-        {error && <div className="text-danger mb-3">{error}</div>}
         {loading ? (
           <div className="text-muted">Loading movies...</div>
         ) : (
