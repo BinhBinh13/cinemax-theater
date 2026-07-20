@@ -14,7 +14,7 @@ export default function MovieFiltersBar({
         value={draftSearchText}
         onChange={(e) => onDraftSearchTextChange(e.target.value)}
       />
-      <Button variant="primary" onClick={onSearchClick}>
+      <Button variant="danger" onClick={onSearchClick}>
         Search
       </Button>
     </div>
