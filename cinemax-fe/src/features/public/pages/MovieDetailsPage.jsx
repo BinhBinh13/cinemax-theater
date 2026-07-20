@@ -115,8 +115,8 @@ const MovieDetailsPage = () => {
                 <Col xs={12} md={8} lg={9}>
                   <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
                     <h2 className="text-white fw-bold m-0">{movie.title}</h2>
-                    <Badge bg={movie.status === 'ACTIVE' ? 'danger' : 'warning'}>
-                      {movie.status === 'ACTIVE' ? 'Đang Chiếu' : 'Sắp Chiếu'}
+                    <Badge bg={movie.status === 'NOW_SHOWING' ? 'danger' : 'warning'}>
+                      {movie.status === 'NOW_SHOWING' ? 'Đang Chiếu' : 'Sắp Chiếu'}
                     </Badge>
                   </div>
 

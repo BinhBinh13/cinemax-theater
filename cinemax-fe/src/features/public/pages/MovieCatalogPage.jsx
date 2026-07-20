@@ -78,8 +78,8 @@ const MovieCatalogPage = () => {
                 style={{ width: '160px', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
               >
                 <option value="ALL" className="bg-dark text-light">Tất cả phim</option>
-                <option value="ACTIVE" className="bg-dark text-light">Đang chiếu</option>
-                <option value="INACTIVE" className="bg-dark text-light">Sắp chiếu</option>
+                <option value="NOW_SHOWING" className="bg-dark text-light">Đang chiếu</option>
+                <option value="COMING_SOON" className="bg-dark text-light">Sắp chiếu</option>
               </Form.Select>
             </div>
           </div>
@@ -133,12 +133,12 @@ const MovieCatalogPage = () => {
                             alt={movie.title}
                             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                           />
-                          <Badge 
-                            bg={movie.status === 'ACTIVE' ? 'danger' : 'warning'} 
-                            className="position-absolute m-2 px-2 py-1.5 fs-7" 
+                          <Badge
+                            bg={movie.status === 'NOW_SHOWING' ? 'danger' : 'warning'}
+                            className="position-absolute m-2 px-2 py-1.5 fs-7"
                             style={{ top: 0, left: 0 }}
                           >
-                            {movie.status === 'ACTIVE' ? 'Đang Chiếu' : 'Sắp Chiếu'}
+                            {movie.status === 'NOW_SHOWING' ? 'Đang Chiếu' : 'Sắp Chiếu'}
                           </Badge>
                         </div>
                         

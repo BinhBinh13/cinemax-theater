@@ -16,7 +16,7 @@ export default function AdminMovieManagement() {
   const [posterUrl, setPosterUrl] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
+  const [status, setStatus] = useState("COMING_SOON");
 
   useEffect(() => {
     loadMovies();
@@ -36,7 +36,7 @@ export default function AdminMovieManagement() {
     setPosterUrl("");
     setReleaseDate("");
     setEndDate("");
-    setStatus("ACTIVE");
+    setStatus("COMING_SOON");
     setShowModal(true);
   };
 
@@ -48,7 +48,7 @@ export default function AdminMovieManagement() {
     setPosterUrl(movie.posterUrl || "");
     setReleaseDate(movie.releaseDate || "");
     setEndDate(movie.endDate || "");
-    setStatus(movie.status || "ACTIVE");
+    setStatus(movie.status || "COMING_SOON");
     setShowModal(true);
   };
 
@@ -141,7 +141,7 @@ export default function AdminMovieManagement() {
                 <td>{movie.releaseDate || "—"}</td>
                 <td>{movie.endDate || "—"}</td>
                 <td>
-                  <span className={`badge ${movie.status === "ACTIVE" ? "bg-success" : "bg-secondary"}`}>
+                  <span className={`badge ${movie.status === "NOW_SHOWING" ? "bg-success" : "bg-secondary"}`}>
                     {movie.status}
                   </span>
                 </td>
@@ -217,8 +217,9 @@ export default function AdminMovieManagement() {
             <div className="mb-3">
               <label className="form-label">Trạng thái</label>
               <select className="form-control" value={status} onChange={(e) => setStatus(e.target.value)}>
-                <option value="ACTIVE">ACTIVE (Đang hoạt động)</option>
-                <option value="INACTIVE">INACTIVE (Dừng hoạt động)</option>
+                <option value="COMING_SOON">Sắp chiếu</option>
+                <option value="NOW_SHOWING">Đang chiếu</option>
+                <option value="ENDED">Ngừng chiếu</option>
               </select>
             </div>
             <div className="mb-3">
