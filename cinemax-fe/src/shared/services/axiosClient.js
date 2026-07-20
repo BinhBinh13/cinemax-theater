@@ -7,12 +7,9 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-  const userData = localStorage.getItem("user");
-  if (userData) {
-    const user = JSON.parse(userData);
-    if (user.accessToken) {
-      config.headers.Authorization = `Bearer ${user.accessToken}`;
-    }
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
@@ -21,6 +18,7 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.location.href = "/login";
     }

@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '@/app/providers/AuthContext'
 
 const navItems = [
   { label: 'Movie List', to: '/staff/movies' },
   { label: 'Food and Drinks', to: '/staff/food-drinks' },
   { label: 'Rooms', to: '/staff/rooms' },
   { label: 'Staff Profile', to: '/staff/profile' },
-  { label: 'Home', to: '/' },
+  { label: 'Home', to: '/staff/movies' },
 ]
 
 const styles = {
@@ -29,7 +30,7 @@ const styles = {
     width: 36,
     height: 36,
     borderRadius: '50%',
-    background: '#6d28d9',
+    background: '#e50914', // matched red theme
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
@@ -53,17 +54,43 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 2,
+    flexGrow: 1,
   },
+  logoutContainer: {
+    marginTop: 'auto',
+    padding: '16px 8px',
+    borderTop: '1px solid #e5e7eb',
+  },
+  logoutBtn: {
+    width: '100%',
+    padding: '8px 12px',
+    background: 'rgba(229, 9, 20, 0.08)',
+    border: '1px solid rgba(229, 9, 20, 0.15)',
+    color: '#e50914',
+    borderRadius: 6,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: 'pointer',
+    textAlign: 'center',
+    transition: 'all 0.2s',
+  }
 }
 
 export default function StaffSideBar({ username = 'Binh', role = 'Staff' }) {
+  const { user, logout } = useAuth()
+
+  const displayUsername = user?.fullName || user?.username || username
+  const displayRole = user?.roles
+    ? user.roles.map((r) => r.replace('ROLE_', '')).join(', ')
+    : role
+
   return (
     <div style={styles.sidebar}>
       <div style={styles.userBox}>
-        <div style={styles.avatar}>{username.charAt(0)}</div>
+        <div style={styles.avatar}>{displayUsername.charAt(0).toUpperCase()}</div>
         <div>
-          <div style={styles.username}>{username}</div>
-          <div style={styles.role}>{role}</div>
+          <div style={styles.username}>{displayUsername}</div>
+          <div style={styles.role}>{displayRole}</div>
         </div>
       </div>
 
@@ -79,8 +106,8 @@ export default function StaffSideBar({ username = 'Binh', role = 'Staff' }) {
               borderRadius: 6,
               fontSize: 13,
               fontWeight: isActive ? 600 : 400,
-              color: isActive ? '#6d28d9' : '#374151',
-              background: isActive ? '#ede9fe' : 'transparent',
+              color: isActive ? '#e50914' : '#374151',
+              background: isActive ? 'rgba(229, 9, 20, 0.08)' : 'transparent',
               textDecoration: 'none',
               transition: 'background 0.15s',
             })}
@@ -89,6 +116,23 @@ export default function StaffSideBar({ username = 'Binh', role = 'Staff' }) {
           </NavLink>
         ))}
       </nav>
+
+      <div style={styles.logoutContainer}>
+        <button 
+          style={styles.logoutBtn} 
+          onClick={logout}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = '#e50914'
+            e.currentTarget.style.color = '#fff'
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = 'rgba(229, 9, 20, 0.08)'
+            e.currentTarget.style.color = '#e50914'
+          }}
+        >
+          Đăng Xuất
+        </button>
+      </div>
     </div>
   )
 }

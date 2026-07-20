@@ -1,20 +1,21 @@
 package fu.se.cinemaxtheaterbe.features.room.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.enums.SeatType;
-import fu.se.cinemaxtheaterbe.entity.theater.Seat;
 import fu.se.cinemaxtheaterbe.entity.enums.SeatStatus;
 import fu.se.cinemaxtheaterbe.entity.enums.SeatType;
+import fu.se.cinemaxtheaterbe.entity.theater.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
+@Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
-    Set<Seat> findByRoomId(Long roomId);
+    List<Seat> findByRoomId(Long roomId);
 
     Optional<Seat> findByIdAndDeletedFalse(@Param("id") Long id);
 

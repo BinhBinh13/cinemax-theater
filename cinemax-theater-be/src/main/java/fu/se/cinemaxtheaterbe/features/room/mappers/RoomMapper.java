@@ -41,8 +41,8 @@ public interface RoomMapper {
                 .id(seat.getId())
                 .seatRow(seat.getSeatRow())
                 .seatColumn(seat.getSeatColumn())
-                .seatType(seat.getSeatType() != null ? seat.getSeatType().name() : "NORMAL")
-                .status(seat.getStatus() != null ? seat.getStatus().name() : "ACTIVE")
+                .seatType(seat.getSeatType())
+                .status(seat.getStatus())
                 .build();
     }
 
