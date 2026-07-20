@@ -217,7 +217,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                     .posterUrl("https://image.tmdb.org/t/p/original/qmDp59hUgRStpeAfAlsbHGTYMvj.jpg")
                     .releaseDate(LocalDate.now().minusDays(10))
                     .endDate(LocalDate.now().plusDays(20))
-                    .status(MovieStatus.ACTIVE)
+                    .status(MovieStatus.NOW_SHOWING)
                     .build();
             movie1 = movieRepository.save(movie1);
 
@@ -228,7 +228,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                     .posterUrl("https://image.tmdb.org/t/p/original/gEU2QvHOm42GCv7et24Jif1jGv1.jpg")
                     .releaseDate(LocalDate.now().minusDays(5))
                     .endDate(LocalDate.now().plusDays(25))
-                    .status(MovieStatus.ACTIVE)
+                    .status(MovieStatus.NOW_SHOWING)
                     .build();
             movie2 = movieRepository.save(movie2);
 
@@ -239,7 +239,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                     .posterUrl("https://image.tmdb.org/t/p/original/or06seB2lUki45Rb3wwOIU8gcw4.jpg")
                     .releaseDate(LocalDate.now().plusDays(1)) // Upcoming
                     .endDate(LocalDate.now().plusDays(30))
-                    .status(MovieStatus.ACTIVE)
+                    .status(MovieStatus.COMING_SOON)
                     .build();
             movie3 = movieRepository.save(movie3);
 

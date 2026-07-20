@@ -46,7 +46,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse createMovie(MovieRequest request) {
         Movie movie = movieMapper.toEntity(request);
         if (movie.getStatus() == null) {
-            movie.setStatus(MovieStatus.ACTIVE);
+            movie.setStatus(MovieStatus.COMING_SOON);
         }
         movie.setGenres(resolveGenres(request.getGenreIds()));
         return movieMapper.toResponse(movieRepository.save(movie));
@@ -67,7 +67,7 @@ public class MovieServiceImpl implements MovieService {
     public void deleteMovie(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found: " + id));
-        movie.setStatus(MovieStatus.INACTIVE);
+        movie.setStatus(MovieStatus.ENDED);
         movieRepository.save(movie);
     }
 
