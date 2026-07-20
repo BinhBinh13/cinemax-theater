@@ -19,15 +19,11 @@ export function getFoodDrinkById(id) {
 }
 
 export function createFoodDrink(payload) {
-  return axiosClient.post('/api/v1/food-drinks', toFormData(payload), {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  return axiosClient.post('/api/v1/food-drinks', toFormData(payload))
 }
 
 export function updateFoodDrink(id, payload) {
-  return axiosClient.put(`/api/v1/food-drinks/${id}`, toFormData(payload), {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  return axiosClient.put(`/api/v1/food-drinks/${id}`, toFormData(payload))
 }
 
 export function deleteFoodDrink(id) {

@@ -9,7 +9,7 @@ const styles = {
   },
 }
 
-export default function MovieGrid({ movies }) {
+export default function MovieGrid({ movies, onDelete }) {
   if (!movies || movies.length === 0) {
     return (
       <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px 0', fontSize: 14 }}>
@@ -21,7 +21,7 @@ export default function MovieGrid({ movies }) {
   return (
     <div style={styles.grid}>
       {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
+        <MovieCard key={movie.id} movie={movie} onDelete={onDelete} />
       ))}
     </div>
   )
