@@ -29,7 +29,7 @@ const S = {
     color: '#111827',
     letterSpacing: 0.5,
   },
-  headerAccent: { color: '#7c3aed' },
+  headerAccent: { color: '#e50914' },
   searchInput: {
     background: '#fff',
     border: '1px solid #e5e7eb',
@@ -42,14 +42,14 @@ const S = {
     boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
   },
   addBtn: {
-    background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
+    background: 'linear-gradient(135deg, #e50914, #b80710)',
     border: 'none',
     borderRadius: 10,
     padding: '10px 22px',
     fontWeight: 600,
     fontSize: 14,
     color: '#fff',
-    boxShadow: '0 2px 8px rgba(124,58,237,0.25)',
+    boxShadow: '0 2px 8px rgba(229,9,20,0.3)',
   },
   grid: {
     display: 'grid',
@@ -89,7 +89,7 @@ const S = {
   statValue: {
     fontSize: 20,
     fontWeight: 700,
-    color: '#7c3aed',
+    color: '#e50914',
   },
   statLabel: {
     fontSize: 11,
@@ -290,8 +290,8 @@ export default function RoomListPage() {
                   onClick={() => navigate(`/staff/rooms/${room.id}`)}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-3px)'
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(124,58,237,0.1)'
-                    e.currentTarget.style.borderColor = '#c4b5fd'
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(229,9,20,0.1)'
+                    e.currentTarget.style.borderColor = '#f3a3a8'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
@@ -343,7 +343,7 @@ export default function RoomListPage() {
                       Delete
                     </button>
                     <button
-                      style={{ ...S.actionBtn, background: '#eef2ff', color: '#6366f1', marginLeft: 'auto' }}
+                      style={{ ...S.actionBtn, background: '#fdecea', color: '#e50914', marginLeft: 'auto' }}
                       onClick={(e) => { e.stopPropagation(); navigate(`/staff/rooms/${room.id}`) }}
                     >
                       View Seats →
@@ -443,7 +443,7 @@ export default function RoomListPage() {
               variant="primary"
               type="submit"
               style={{
-                background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
+                background: 'linear-gradient(135deg, #e50914, #b80710)',
                 border: 'none',
                 borderRadius: 8,
                 padding: '8px 24px',

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Table,
   Button,
   Modal,
   Form,
@@ -25,6 +24,122 @@ import {
 function resolveImageUrl(url) {
   if (!url) return "";
   return url.startsWith("http") ? url : `${BASE_URL}${url}`;
+}
+
+const S = {
+  page: {
+    background: '#f5f5f9',
+    minHeight: '100vh',
+    color: '#1f2937',
+  },
+  header: {
+    fontSize: 26,
+    fontWeight: 700,
+    color: '#111827',
+    letterSpacing: 0.5,
+  },
+  headerAccent: { color: '#e50914' },
+  searchInput: {
+    background: '#fff',
+    border: '1px solid #e5e7eb',
+    color: '#1f2937',
+    borderRadius: 10,
+    padding: '10px 16px',
+    maxWidth: 300,
+    outline: 'none',
+    fontSize: 14,
+    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+  },
+  addBtn: {
+    background: 'linear-gradient(135deg, #e50914, #b80710)',
+    border: 'none',
+    borderRadius: 10,
+    padding: '10px 22px',
+    fontWeight: 600,
+    fontSize: 14,
+    color: '#fff',
+    boxShadow: '0 2px 8px rgba(229,9,20,0.3)',
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+    gap: 20,
+  },
+  card: {
+    background: '#fff',
+    borderRadius: 14,
+    border: '1px solid #e5e7eb',
+    padding: '18px',
+    transition: 'all 0.25s ease',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+  },
+  thumb: {
+    width: '100%',
+    height: 140,
+    objectFit: 'cover',
+    borderRadius: 10,
+    marginBottom: 14,
+    background: '#f3f4f6',
+  },
+  thumbPlaceholder: {
+    width: '100%',
+    height: 140,
+    borderRadius: 10,
+    marginBottom: 14,
+    background: '#f3f4f6',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#9ca3af',
+    fontSize: 13,
+  },
+  itemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+    gap: 8,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: '#111827',
+  },
+  metaRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    fontSize: 13,
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: '#e50914',
+    marginTop: 8,
+    marginBottom: 14,
+  },
+  cardActions: {
+    display: 'flex',
+    gap: 8,
+    paddingTop: 14,
+    borderTop: '1px solid #e5e7eb',
+  },
+  actionBtn: {
+    border: 'none',
+    borderRadius: 8,
+    padding: '7px 16px',
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+  },
+  emptyState: {
+    gridColumn: '1 / -1',
+    textAlign: 'center',
+    padding: '60px 0',
+    color: '#9ca3af',
+  },
 }
 
 const emptyForm = {
@@ -209,10 +324,17 @@ export default function FoodDrinkListPage() {
     : items;
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
+    <div className="d-flex">
       <StaffSideBar />
-      <main className="flex-grow-1 p-4">
-        <h4 className="fw-normal mb-4">Food &amp; Drinks</h4>
+      <div style={S.page} className="flex-grow-1 p-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div style={S.header}>
+            🍿 <span style={S.headerAccent}>Food</span> &amp; Drinks
+          </div>
+          <Button style={S.addBtn} onClick={openAddModal}>
+            + Add new item
+          </Button>
+        </div>
 
         {message && (
           <Alert
@@ -224,100 +346,92 @@ export default function FoodDrinkListPage() {
           </Alert>
         )}
 
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Form.Control
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <input
             type="text"
             placeholder="Search item by name..."
-            style={{ maxWidth: 280 }}
+            style={S.searchInput}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <Button variant="primary" onClick={openAddModal}>
-            + Add new item
-          </Button>
+          <span style={{ color: '#9ca3af', fontSize: 13 }}>
+            {visibleItems.length} item{visibleItems.length !== 1 && 's'}
+          </span>
         </div>
 
         {loading ? (
-          <div className="text-muted">Loading items...</div>
+          <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af' }}>
+            Loading items...
+          </div>
         ) : (
-          <Table responsive bordered hover>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Quantity</th>
-                <th>Price (VND)</th>
-                <th>Status</th>
-                <th className="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleItems.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center text-muted py-4">
-                    No items found.
-                  </td>
-                </tr>
-              ) : (
-                visibleItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      {item.imageURL ? (
-                        <img
-                          src={resolveImageUrl(item.imageURL)}
-                          alt={item.itemName}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: "cover",
-                            borderRadius: 4,
-                          }}
-                        />
-                      ) : (
-                        <span className="text-muted">No image</span>
-                      )}
-                    </td>
-                    <td>{item.itemName}</td>
-                    <td>{item.itemType}</td>
-                    <td>{item.quantityInStock}</td>
-                    <td>{Number(item.price).toLocaleString("vi-VN")}</td>
-                    <td>
-                      <Badge
-                        bg={item.status === "ACTIVE" ? "success" : "secondary"}
-                      >
-                        {item.status}
-                      </Badge>
-                    </td>
-                    <td className="text-center text-nowrap">
-                      <Button
-                        size="sm"
-                        variant="outline-secondary"
-                        className="me-2"
-                        onClick={() => openEditModal(item)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline-danger"
-                        onClick={() => handleDelete(item)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
+          <div style={S.grid}>
+            {visibleItems.length === 0 ? (
+              <div style={S.emptyState}>
+                <div style={{ fontSize: 40, marginBottom: 12 }}>🍿</div>
+                <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4, color: '#6b7280' }}>
+                  No items found
+                </div>
+                <div style={{ fontSize: 13 }}>
+                  {q ? 'Try a different search term.' : 'Click "+ Add new item" to get started.'}
+                </div>
+              </div>
+            ) : (
+              visibleItems.map((item) => (
+                <div key={item.id} style={S.card}>
+                  {item.imageURL ? (
+                    <img
+                      src={resolveImageUrl(item.imageURL)}
+                      alt={item.itemName}
+                      style={S.thumb}
+                    />
+                  ) : (
+                    <div style={S.thumbPlaceholder}>No image</div>
+                  )}
+
+                  <div style={S.itemHeader}>
+                    <div style={S.itemName}>{item.itemName}</div>
+                    <Badge
+                      bg={item.status === 'ACTIVE' ? 'success' : 'secondary'}
+                      style={{ borderRadius: 6, fontSize: 11, padding: '4px 10px', flexShrink: 0 }}
+                    >
+                      {item.status}
+                    </Badge>
+                  </div>
+
+                  <div style={S.metaRow}>
+                    <span>{item.itemType}</span>
+                    <span>Qty: {item.quantityInStock}</span>
+                  </div>
+
+                  <div style={S.price}>
+                    {Number(item.price).toLocaleString('vi-VN')} đ
+                  </div>
+
+                  <div style={S.cardActions}>
+                    <button
+                      style={{ ...S.actionBtn, background: '#f3f4f6', color: '#374151' }}
+                      onClick={() => openEditModal(item)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      style={{ ...S.actionBtn, background: '#fef2f2', color: '#ef4444' }}
+                      onClick={() => handleDelete(item)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         )}
-      </main>
+      </div>
 
       <Modal show={showModal} onHide={closeModal} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {editingItem ? "Update item" : "Add new item"}
+        <Modal.Header closeButton style={{ borderBottom: '1px solid #e5e7eb' }}>
+          <Modal.Title style={{ color: '#111827', fontSize: 18, fontWeight: 700 }}>
+            {editingItem ? "✏️ Update item" : "➕ Add new item"}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
@@ -411,9 +525,9 @@ export default function FoodDrinkListPage() {
                   onDragLeave={() => setDragActive(false)}
                   onDrop={handleDrop}
                   style={{
-                    border: `2px dashed ${dragActive ? "#6d28d9" : "#c7c7f5"}`,
+                    border: `2px dashed ${dragActive ? "#e50914" : "#f3b4b8"}`,
                     borderRadius: 8,
-                    background: dragActive ? "#ede9fe" : "#f5f5ff",
+                    background: dragActive ? "#fdecea" : "#fff8f8",
                     padding: "28px 16px",
                     textAlign: "center",
                     cursor: uploading ? "not-allowed" : "pointer",
@@ -494,20 +608,35 @@ export default function FoodDrinkListPage() {
               </Col>
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={closeModal}>
+          <Modal.Footer style={{ borderTop: '1px solid #e5e7eb' }}>
+            <Button
+              variant="secondary"
+              onClick={closeModal}
+              style={{ borderRadius: 8, padding: '8px 20px' }}
+            >
               Cancel
             </Button>
             {!editingItem && (
               <Button
-                variant="outline-primary"
+                variant="outline-danger"
                 type="button"
                 onClick={handleSaveDraft}
+                style={{ borderRadius: 8, padding: '8px 20px' }}
               >
                 Save Draft
               </Button>
             )}
-            <Button variant="primary" type="submit" disabled={uploading}>
+            <Button
+              type="submit"
+              disabled={uploading}
+              style={{
+                background: 'linear-gradient(135deg, #e50914, #b80710)',
+                border: 'none',
+                borderRadius: 8,
+                padding: '8px 24px',
+                fontWeight: 600,
+              }}
+            >
               Save
             </Button>
           </Modal.Footer>
