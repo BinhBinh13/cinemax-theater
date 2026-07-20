@@ -73,14 +73,14 @@ const CustomerProfilePage = () => {
   }
 
   return (
-    <div className="cinema-bg text-light min-vh-100 d-flex flex-column">
+    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
         <Container style={{ maxWidth: '600px' }}>
           
           <div className="mb-4 text-center">
-            <h2 className="text-white fw-bold mb-1">Thông Tin Tài Khoản</h2>
+            <h2 className="text-dark fw-bold mb-1">Thông Tin Tài Khoản</h2>
             <p className="text-secondary small">Quản lý và cập nhật thông tin cá nhân của bạn</p>
           </div>
 
@@ -184,7 +184,7 @@ const CustomerProfilePage = () => {
         </Container>
       </main>
 
-      <footer className="py-4 text-center text-secondary small border-top border-secondary border-opacity-10" style={{ background: '#0a090f' }}>
+      <footer className="cinema-footer py-4 text-center text-secondary small border-top">
         © {new Date().getFullYear()} Cinemax Grand Center. All rights reserved.
       </footer>
     </div>

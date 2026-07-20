@@ -149,7 +149,7 @@ export default function AdminUserManagement() {
             />
           </div>
           <div className="col-md-8 text-end">
-            <button className="btn btn-primary" onClick={handleShowAdd}>
+            <button className="btn btn-danger" onClick={handleShowAdd}>
               + Tạo tài khoản mới
             </button>
           </div>
@@ -291,7 +291,7 @@ export default function AdminUserManagement() {
             <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
               Hủy
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-danger">
               Lưu tài khoản
             </button>
           </div>

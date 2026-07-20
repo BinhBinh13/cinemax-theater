@@ -44,7 +44,7 @@ const MovieCatalogPage = () => {
   })
 
   return (
-    <div className="cinema-bg text-light min-vh-100 d-flex flex-column">
+    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
@@ -53,7 +53,7 @@ const MovieCatalogPage = () => {
           {/* Headline & Filter Section */}
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
             <div>
-              <h2 className="text-white fw-bold mb-1">Lịch Chiếu Phim</h2>
+              <h2 className="text-dark fw-bold mb-1">Lịch Chiếu Phim</h2>
               <p className="text-secondary small m-0">Đặt vé xem phim chất lượng cao trực tuyến</p>
             </div>
             
@@ -74,12 +74,12 @@ const MovieCatalogPage = () => {
                 size="sm"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="cinema-input border-secondary border-opacity-25"
-                style={{ width: '160px', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                className="cinema-input"
+                style={{ width: '160px' }}
               >
-                <option value="ALL" className="bg-dark text-light">Tất cả phim</option>
-                <option value="NOW_SHOWING" className="bg-dark text-light">Đang chiếu</option>
-                <option value="COMING_SOON" className="bg-dark text-light">Sắp chiếu</option>
+                <option value="ALL">Tất cả phim</option>
+                <option value="NOW_SHOWING">Đang chiếu</option>
+                <option value="COMING_SOON">Sắp chiếu</option>
               </Form.Select>
             </div>
           </div>
@@ -143,7 +143,7 @@ const MovieCatalogPage = () => {
                         </div>
                         
                         <Card.Body className="p-3 d-flex flex-column justify-content-between flex-grow-1">
-                          <Card.Title className="text-white fs-5 fw-bold text-truncate mb-1">{movie.title}</Card.Title>
+                          <Card.Title className="text-dark fs-5 fw-bold text-truncate mb-1">{movie.title}</Card.Title>
                           <div className="d-flex justify-content-between align-items-center text-secondary small">
                             <span>⏱️ {movie.duration} phút</span>
                             {movie.screeningStart && (
@@ -163,7 +163,7 @@ const MovieCatalogPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="py-4 text-center mt-5 text-secondary small border-top border-secondary border-opacity-10" style={{ background: '#0a090f' }}>
+      <footer className="cinema-footer py-4 text-center mt-5 text-secondary small border-top">
         © {new Date().getFullYear()} Cinemax Grand Center. All rights reserved.
       </footer>
     </div>

@@ -68,7 +68,7 @@ const MovieDetailsPage = () => {
   const groupedSchedules = groupSchedulesByDate()
 
   return (
-    <div className="cinema-bg text-light min-vh-100 d-flex flex-column">
+    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
@@ -114,7 +114,7 @@ const MovieDetailsPage = () => {
                 
                 <Col xs={12} md={8} lg={9}>
                   <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
-                    <h2 className="text-white fw-bold m-0">{movie.title}</h2>
+                    <h2 className="text-dark fw-bold m-0">{movie.title}</h2>
                     <Badge bg={movie.status === 'NOW_SHOWING' ? 'danger' : 'warning'}>
                       {movie.status === 'NOW_SHOWING' ? 'Đang Chiếu' : 'Sắp Chiếu'}
                     </Badge>
@@ -128,7 +128,7 @@ const MovieDetailsPage = () => {
                   </div>
 
                   <div className="mb-4">
-                    <h5 className="text-white fw-semibold mb-2">Tóm Tắt Phim</h5>
+                    <h5 className="text-dark fw-semibold mb-2">Tóm Tắt Phim</h5>
                     <p className="text-secondary small lh-lg" style={{ maxWidth: '800px' }}>
                       {movie.description || 'Chưa có thông tin tóm tắt nội dung phim.'}
                     </p>
@@ -140,7 +140,7 @@ const MovieDetailsPage = () => {
               <hr className="border-secondary opacity-25 my-5" />
 
               <div>
-                <h4 className="text-white fw-bold mb-4">Lịch Chiếu & Suất Chiếu</h4>
+                <h4 className="text-dark fw-bold mb-4">Lịch Chiếu & Suất Chiếu</h4>
                 
                 {schedules.length === 0 ? (
                   <div className="glass-card p-4 text-center text-secondary small">
@@ -166,21 +166,21 @@ const MovieDetailsPage = () => {
                             
                             return (
                               <Col key={schedule.id} xs={6} sm={4} md={3} lg={2.4}>
-                                <Card 
-                                  as={Link} 
+                                <Card
+                                  as={Link}
                                   to={`/booking/${schedule.id}`}
-                                  className="bg-white bg-opacity-5 border border-secondary border-opacity-25 text-decoration-none text-light p-3 text-center transition-all h-100 hover-border-danger"
+                                  className="bg-light border text-decoration-none text-dark p-3 text-center transition-all h-100"
                                   style={{ borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s' }}
                                   onMouseOver={(e) => {
                                     e.currentTarget.style.borderColor = '#e50914'
-                                    e.currentTarget.style.background = 'rgba(229, 9, 20, 0.05)'
+                                    e.currentTarget.style.background = 'rgba(229, 9, 20, 0.06)'
                                   }}
                                   onMouseOut={(e) => {
-                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'
-                                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
+                                    e.currentTarget.style.borderColor = ''
+                                    e.currentTarget.style.background = ''
                                   }}
                                 >
-                                  <div className="fs-4 fw-bold text-white mb-1">{startTime}</div>
+                                  <div className="fs-4 fw-bold text-dark mb-1">{startTime}</div>
                                   {endTime && <div className="small text-secondary mb-2">~ {endTime}</div>}
                                   <div className="small text-gold fw-semibold mb-1">{schedule.roomName}</div>
                                   <Badge bg="secondary" className="small">
@@ -202,7 +202,7 @@ const MovieDetailsPage = () => {
         </Container>
       </main>
 
-      <footer className="py-4 text-center text-secondary small border-top border-secondary border-opacity-10" style={{ background: '#0a090f' }}>
+      <footer className="cinema-footer py-4 text-center text-secondary small border-top">
         © {new Date().getFullYear()} Cinemax Grand Center. All rights reserved.
       </footer>
     </div>

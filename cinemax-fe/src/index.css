@@ -116,78 +116,79 @@ code {
   border-inline: none;
 }
 
-/* Cinemax Premium Theme Extensions */
+/* Cinemax Premium Theme Extensions (light) */
 .cinema-bg {
-  background: radial-gradient(circle at top, #1e1b29 0%, #0a090f 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f4f5f7 100%);
   min-height: 100vh;
 }
 
 .glass-card {
-  background: rgba(20, 18, 30, 0.75) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 8px 24px 0 rgba(17, 24, 39, 0.08) !important;
   border-radius: 16px;
-  color: #fff !important;
+  color: #111827 !important;
 }
 
 .neon-btn {
   background: linear-gradient(135deg, #e50914 0%, #b80710 100%);
   border: none;
-  box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.3);
   transition: all 0.3s ease;
   font-weight: 600;
   color: #fff;
 }
 
 .neon-btn:hover {
-  box-shadow: 0 0 25px rgba(229, 9, 20, 0.7);
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.45);
   transform: translateY(-2px);
   background: linear-gradient(135deg, #ff0f1b 0%, #e50914 100%);
 }
 
 .cinema-input {
-  background: #0d0a15 !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
   transition: all 0.3s ease;
 }
 
 .cinema-input:focus {
-  background: #120f21 !important;
+  background: #ffffff !important;
   border-color: #e50914 !important;
-  box-shadow: 0 0 10px rgba(229, 9, 20, 0.35) !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15) !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
 }
 
-.cinema-input:disabled, 
+.cinema-input:disabled,
 .cinema-input[disabled],
 .cinema-input.disabled {
-  background: #09070f !important;
-  color: rgba(255, 255, 255, 0.4) !important;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.4) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #f3f4f6 !important;
+  color: rgba(17, 24, 39, 0.45) !important;
+  -webkit-text-fill-color: rgba(17, 24, 39, 0.45) !important;
+  border: 1px solid #e5e7eb !important;
   cursor: not-allowed;
 }
 
 .cinema-input:-webkit-autofill,
-.cinema-input:-webkit-autofill:hover, 
+.cinema-input:-webkit-autofill:hover,
 .cinema-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #ffffff !important;
-  -webkit-box-shadow: 0 0 0px 1000px #1e1b29 inset !important;
+  -webkit-text-fill-color: #111827 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .text-gold {
-  color: #f5c518;
+  color: #a67c00;
 }
 
 .cinema-logo {
   font-family: 'Outfit', sans-serif;
   font-weight: 800;
   letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+.cinema-footer {
+  background: #f8f9fa;
 }

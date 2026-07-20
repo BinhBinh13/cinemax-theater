@@ -8,28 +8,32 @@
 
 .admin-sidebar {
   width: 250px;
-  background-color: #343a40;
-  color: #fff;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e5e7eb;
+  color: #111827;
   padding: 20px;
   min-height: 100vh;
 }
 
 .admin-sidebar a {
-  color: #ccc;
+  color: #374151;
   text-decoration: none;
   display: block;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .admin-sidebar a:hover {
-  background-color: #495057;
-  color: #fff;
+  background-color: rgba(229, 9, 20, 0.08);
+  color: #e50914;
 }
 
 .admin-sidebar a.active {
-  background-color: #0d6efd;
-  color: #fff;
+  background-color: rgba(229, 9, 20, 0.08);
+  color: #e50914;
+  font-weight: 600;
 }
 
 .admin-main {

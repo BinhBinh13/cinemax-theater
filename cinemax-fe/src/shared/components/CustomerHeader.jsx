@@ -16,22 +16,22 @@ const CustomerHeader = () => {
   }
 
   return (
-    <Navbar collapseOnSelect expand="lg" variant="dark" style={{ background: '#14121e', borderBottom: '1px solid rgba(255,255,255,0.08)' }} className="py-2.5 sticky-top">
+    <Navbar collapseOnSelect expand="lg" variant="light" style={{ background: '#ffffff', borderBottom: '1px solid #e5e7eb' }} className="py-2.5 sticky-top">
       <Container>
         <Navbar.Brand as={Link} to="/" className="cinema-logo text-danger fw-bold fs-3">
           CINE<span className="text-gold">MAX</span>
         </Navbar.Brand>
-        
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-0 bg-transparent" />
-        
+
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto ms-lg-4">
-            <Nav.Link 
-              as={NavLink} 
-              to="/" 
+            <Nav.Link
+              as={NavLink}
+              to="/"
               end
               style={({ isActive }) => ({
-                color: isActive ? '#e50914' : '#b3b3b7',
+                color: isActive ? '#e50914' : '#495057',
                 fontWeight: isActive ? '600' : '400',
                 transition: 'color 0.2s',
               })}
@@ -39,14 +39,14 @@ const CustomerHeader = () => {
             >
               Phim Đang Chiếu
             </Nav.Link>
-            
+
             {isAuthenticated && (
               <>
-                <Nav.Link 
-                  as={NavLink} 
+                <Nav.Link
+                  as={NavLink}
                   to="/history"
                   style={({ isActive }) => ({
-                    color: isActive ? '#e50914' : '#b3b3b7',
+                    color: isActive ? '#e50914' : '#495057',
                     fontWeight: isActive ? '600' : '400',
                     transition: 'color 0.2s',
                   })}
@@ -54,11 +54,11 @@ const CustomerHeader = () => {
                 >
                   Lịch Sử Đặt Vé
                 </Nav.Link>
-                <Nav.Link 
-                  as={NavLink} 
+                <Nav.Link
+                  as={NavLink}
                   to="/profile"
                   style={({ isActive }) => ({
-                    color: isActive ? '#e50914' : '#b3b3b7',
+                    color: isActive ? '#e50914' : '#495057',
                     fontWeight: isActive ? '600' : '400',
                     transition: 'color 0.2s',
                   })}
@@ -69,12 +69,12 @@ const CustomerHeader = () => {
               </>
             )}
           </Nav>
-          
+
           <Nav className="align-items-center gap-3">
             {isAuthenticated ? (
               <>
-                <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-white hover-opacity">
-                  <div 
+                <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-dark hover-opacity">
+                  <div
                     style={{
                       width: '32px',
                       height: '32px',
@@ -90,12 +90,12 @@ const CustomerHeader = () => {
                   >
                     {(user?.fullName || user?.username || 'U').charAt(0).toUpperCase()}
                   </div>
-                  <span className="small text-secondary-emphasis d-none d-sm-inline">
+                  <span className="small text-secondary d-none d-sm-inline">
                     {user?.fullName || user?.username}
                   </span>
                 </Link>
-                <Button 
-                  variant="outline-danger" 
+                <Button
+                  variant="outline-danger"
                   size="sm"
                   onClick={handleLogout}
                   className="px-3 py-1"
@@ -105,19 +105,19 @@ const CustomerHeader = () => {
               </>
             ) : (
               <>
-                <Button 
-                  as={Link} 
-                  to="/login" 
-                  variant="outline-light" 
+                <Button
+                  as={Link}
+                  to="/login"
+                  variant="outline-secondary"
                   size="sm"
-                  className="px-3 py-1 border-0 text-secondary-emphasis"
+                  className="px-3 py-1"
                 >
                   Đăng Nhập
                 </Button>
-                <Button 
-                  as={Link} 
-                  to="/register" 
-                  variant="danger" 
+                <Button
+                  as={Link}
+                  to="/register"
+                  variant="danger"
                   size="sm"
                   className="neon-btn px-4 py-1"
                 >

@@ -149,7 +149,7 @@ const SeatingChartPage = () => {
   const sortedRowKeys = Object.keys(seatsByRow).sort()
 
   return (
-    <div className="cinema-bg text-light min-vh-100 d-flex flex-column">
+    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
@@ -208,15 +208,15 @@ const SeatingChartPage = () => {
                             const isSelected = selectedSeats.some((s) => s.id === seat.id)
                             
                             // Determine style
-                            let bg = 'rgba(255, 255, 255, 0.05)'
-                            let border = '1px solid rgba(255, 255, 255, 0.15)'
-                            let color = '#a3a3a8'
+                            let bg = 'rgba(0, 0, 0, 0.03)'
+                            let border = '1px solid rgba(0, 0, 0, 0.15)'
+                            let color = '#495057'
                             let cursor = 'pointer'
 
                             if (isOccupied) {
-                              bg = 'rgba(255, 255, 255, 0.05)'
-                              border = '1px dashed rgba(255, 255, 255, 0.1)'
-                              color = 'rgba(255, 255, 255, 0.1)'
+                              bg = 'rgba(0, 0, 0, 0.03)'
+                              border = '1px dashed rgba(0, 0, 0, 0.15)'
+                              color = 'rgba(0, 0, 0, 0.25)'
                               cursor = 'not-allowed'
                             } else if (isSelected) {
                               bg = '#198754' // Green
@@ -224,12 +224,12 @@ const SeatingChartPage = () => {
                               color = '#fff'
                             } else if (seat.seatType === 'VIP') {
                               border = '1px solid #6f42c1' // Purple border for VIP
-                              bg = 'rgba(111, 66, 193, 0.1)'
-                              color = '#a07bf0'
+                              bg = 'rgba(111, 66, 193, 0.08)'
+                              color = '#6f42c1'
                             } else if (seat.seatType === 'COUPLE') {
-                              border = '1px solid #fd357e' // Pink border for Couple
-                              bg = 'rgba(253, 53, 126, 0.1)'
-                              color = '#fd357e'
+                              border = '1px solid #d6336c' // Pink border for Couple
+                              bg = 'rgba(214, 51, 108, 0.08)'
+                              color = '#d6336c'
                             }
 
                             return (
@@ -269,17 +269,17 @@ const SeatingChartPage = () => {
                   </div>
 
                   {/* Seat Legend */}
-                  <div className="d-flex justify-content-center flex-wrap gap-4 mt-5 pt-3 border-top border-secondary border-opacity-10 small text-secondary">
+                  <div className="d-flex justify-content-center flex-wrap gap-4 mt-5 pt-3 border-top small text-secondary">
                     <div className="d-flex align-items-center gap-2">
-                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.15)', background: 'rgba(255, 255, 255, 0.05)' }}></div>
+                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid rgba(0, 0, 0, 0.15)', background: 'rgba(0, 0, 0, 0.03)' }}></div>
                       <span>Ghế thường</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
-                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid #6f42c1', background: 'rgba(111, 66, 193, 0.1)' }}></div>
+                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid #6f42c1', background: 'rgba(111, 66, 193, 0.08)' }}></div>
                       <span>Ghế VIP</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
-                      <div style={{ width: '32px', height: '16px', borderRadius: '4px', border: '1px solid #fd357e', background: 'rgba(253, 53, 126, 0.1)' }}></div>
+                      <div style={{ width: '32px', height: '16px', borderRadius: '4px', border: '1px solid #d6336c', background: 'rgba(214, 51, 108, 0.08)' }}></div>
                       <span>Ghế đôi (Couple)</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
@@ -287,7 +287,7 @@ const SeatingChartPage = () => {
                       <span>Đang chọn</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
-                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px dashed rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px' }}>X</div>
+                      <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px dashed rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px' }}>X</div>
                       <span>Đã bán</span>
                     </div>
                   </div>
@@ -299,7 +299,7 @@ const SeatingChartPage = () => {
               <Col xs={12} xl={4}>
                 <div className="glass-card p-4 d-flex flex-column h-100 justify-content-between">
                   <div>
-                    <h4 className="text-white fw-bold mb-3 border-bottom border-secondary border-opacity-15 pb-2">Thông Tin Vé</h4>
+                    <h4 className="text-dark fw-bold mb-3 border-bottom pb-2">Thông Tin Vé</h4>
                     
                     {/* Movie Info */}
                     <div className="mb-4">
@@ -321,7 +321,7 @@ const SeatingChartPage = () => {
 
                     {/* Selected Seats details */}
                     <div className="mb-4">
-                      <h6 className="text-white fw-semibold mb-2">Ghế Đã Chọn:</h6>
+                      <h6 className="text-dark fw-semibold mb-2">Ghế Đã Chọn:</h6>
                       {selectedSeats.length === 0 ? (
                         <div className="text-muted small">Chưa chọn ghế nào. Vui lòng nhấp vào sơ đồ ghế để chọn.</div>
                       ) : (
@@ -335,11 +335,11 @@ const SeatingChartPage = () => {
                           </div>
                           
                           {/* Breakdown */}
-                          <div className="mt-3 bg-white bg-opacity-5 p-3 rounded border border-secondary border-opacity-15 small">
+                          <div className="mt-3 bg-light p-3 rounded border small">
                             {selectedSeats.map((seat) => (
                               <div key={seat.id} className="d-flex justify-content-between text-secondary mb-1">
                                 <span>Ghế {seat.seatRow}{seat.seatColumn} ({seat.seatType})</span>
-                                <span className="text-white">{getTicketPrice(seat).toLocaleString('vi-VN')} đ</span>
+                                <span className="text-dark">{getTicketPrice(seat).toLocaleString('vi-VN')} đ</span>
                               </div>
                             ))}
                           </div>
@@ -351,7 +351,7 @@ const SeatingChartPage = () => {
 
                     {/* Payment methods */}
                     <div className="mb-4">
-                      <h6 className="text-white fw-semibold mb-2">Phương Thức Thanh Toán:</h6>
+                      <h6 className="text-dark fw-semibold mb-2">Phương Thức Thanh Toán:</h6>
                       <Form.Check
                         type="radio"
                         id="pay-cash"
@@ -424,7 +424,7 @@ const SeatingChartPage = () => {
         </Container>
       </main>
 
-      <footer className="py-4 text-center text-secondary small border-top border-secondary border-opacity-10" style={{ background: '#0a090f' }}>
+      <footer className="cinema-footer py-4 text-center text-secondary small border-top">
         © {new Date().getFullYear()} Cinemax Grand Center. All rights reserved.
       </footer>
     </div>

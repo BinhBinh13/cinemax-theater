@@ -106,7 +106,7 @@ export default function AdminConcessionManagement() {
       <AdminSideBar />
       <div className="admin-main">
         <h2 className="mb-4">Quản lý Đồ ăn & Nước uống</h2>
-        <button className="btn btn-primary mb-3" onClick={handleShowAdd}>
+        <button className="btn btn-danger mb-3" onClick={handleShowAdd}>
           + Thêm đồ ăn / uống mới
         </button>
 
@@ -227,7 +227,7 @@ export default function AdminConcessionManagement() {
             <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
               Đóng
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-danger">
               Lưu sản phẩm
             </button>
           </div>

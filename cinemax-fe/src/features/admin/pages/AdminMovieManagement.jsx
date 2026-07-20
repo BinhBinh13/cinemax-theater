@@ -108,7 +108,7 @@ export default function AdminMovieManagement() {
       <AdminSideBar />
       <div className="admin-main">
         <h2 className="mb-4">Quản lý danh sách phim</h2>
-        <button className="btn btn-primary mb-3" onClick={handleShowAdd}>
+        <button className="btn btn-danger mb-3" onClick={handleShowAdd}>
           + Thêm phim mới
         </button>
 
@@ -236,7 +236,7 @@ export default function AdminMovieManagement() {
             <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
               Đóng
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-danger">
               Lưu lại
             </button>
           </div>

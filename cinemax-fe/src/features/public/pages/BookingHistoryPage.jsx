@@ -32,14 +32,14 @@ const BookingHistoryPage = () => {
   }, [])
 
   return (
-    <div className="cinema-bg text-light min-vh-100 d-flex flex-column">
+    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
         <Container style={{ maxWidth: '900px' }}>
           
           <div className="mb-4">
-            <h2 className="text-white fw-bold mb-1">Lịch Sử Đặt Vé</h2>
+            <h2 className="text-dark fw-bold mb-1">Lịch Sử Đặt Vé</h2>
             <p className="text-secondary small">Danh sách các vé xem phim bạn đã giao dịch</p>
           </div>
 
@@ -89,14 +89,14 @@ const BookingHistoryPage = () => {
                       <Card key={booking.bookingId} className="glass-card border-0 overflow-hidden">
                         
                         {/* Card Header (Transaction Meta) */}
-                        <div 
-                          className="px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2" 
-                          style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                        <div
+                          className="px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2"
+                          style={{ background: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}
                         >
                           <div className="small text-secondary">
-                            Mã HĐ: <strong className="text-white">#{booking.bookingId}</strong>
+                            Mã HĐ: <strong className="text-dark">#{booking.bookingId}</strong>
                             <span className="mx-2 text-muted">|</span>
-                            Ngày đặt: <strong className="text-white">{bookingTimeStr}</strong>
+                            Ngày đặt: <strong className="text-dark">{bookingTimeStr}</strong>
                           </div>
                           
                           <div className="d-flex gap-2 align-items-center">
@@ -112,7 +112,7 @@ const BookingHistoryPage = () => {
                               <h4 className="text-danger fw-bold mb-2">{booking.movieTitle}</h4>
                               <div className="text-secondary small d-flex flex-column gap-1">
                                 <div>🎥 <strong>Phòng chiếu:</strong> {booking.roomName}</div>
-                                <div className="text-white">🕒 <strong>Suất chiếu:</strong> {showtimeStr}</div>
+                                <div className="text-dark">🕒 <strong>Suất chiếu:</strong> {showtimeStr}</div>
                               </div>
                             </Col>
                             
@@ -146,7 +146,7 @@ const BookingHistoryPage = () => {
         </Container>
       </main>
 
-      <footer className="py-4 text-center text-secondary small border-top border-secondary border-opacity-10" style={{ background: '#0a090f' }}>
+      <footer className="cinema-footer py-4 text-center text-secondary small border-top">
         © {new Date().getFullYear()} Cinemax Grand Center. All rights reserved.
       </footer>
     </div>

@@ -86,7 +86,7 @@ const StaffProfilePage = () => {
         ) : (
           <div className="w-100" style={{ maxWidth: '550px' }}>
             <h4 className="fw-normal mb-4 text-center">Staff Profile</h4>
-            <Card className="glass-card border-0 p-4 shadow-sm" style={{ background: '#1c1b29' }}>
+            <Card className="glass-card border-0 p-4 shadow-sm">
               <Card.Body>
                 
                 {error && (
