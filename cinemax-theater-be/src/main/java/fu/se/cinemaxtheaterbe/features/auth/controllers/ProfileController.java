@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/users")
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-public class UserController {
+public class ProfileController {
 
     private final AuthService authService;
     private final UserRepository userRepository;
