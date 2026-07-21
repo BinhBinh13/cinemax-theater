@@ -6,17 +6,17 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tickets")
+@Table(name = "booking_foods")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Ticket {
+public class BookingFood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ticket_id")
+    @Column(name = "booking_food_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -24,9 +24,12 @@ public class Ticket {
     private Booking booking;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "seat_id", referencedColumnName = "seat_id")
-    private Seat seat;
+    @JoinColumn(name = "theater_stock_id", referencedColumnName = "theater_stock_id")
+    private TheaterStock foodDrink;
+
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     @Column(name = "price", precision = 12, scale = 2)
-    private BigDecimal price;
+    private BigDecimal price; // Price of food item at the time of booking
 }

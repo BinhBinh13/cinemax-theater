@@ -62,6 +62,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/movies/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/schedules/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/food-drinks/**").permitAll()
+                        // Guest checkout: booking creation + VNPAY payment callback need no login
+                        .requestMatchers("/api/v1/bookings/**").permitAll()
                         // Public testing error pages or resources
                         .requestMatchers("/error").permitAll()
                         // Restrict sensitive endpoints to STAFF or ADMIN roles
@@ -72,7 +75,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/schedules/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/schedules/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/schedules/**").hasAnyRole("STAFF", "ADMIN")
-                        .requestMatchers("/api/v1/food-drinks/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/food-drinks/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/food-drinks/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/food-drinks/**").hasAnyRole("STAFF", "ADMIN")
                         // Any other request requires authentication
                         .anyRequest().authenticated()
                 );

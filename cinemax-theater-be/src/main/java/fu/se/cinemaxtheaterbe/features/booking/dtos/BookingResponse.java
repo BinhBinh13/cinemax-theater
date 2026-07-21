@@ -1,28 +1,43 @@
 package fu.se.cinemaxtheaterbe.features.booking.dtos;
 
-import fu.se.cinemaxtheaterbe.entity.enums.BookingStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class BookingResponse {
     private Long bookingId;
-    private String username;
-    private Long movieId;
+    private String txnRef;
     private String movieTitle;
-    private Long roomId;
     private String roomName;
-    private LocalDateTime startTime;
-    private LocalDateTime bookingTime;
+    private String showtime;
+    private String fullName;
+    private String email;
+    private String phone;
+    private List<String> seatCodes;
+    private List<FoodItemResponse> foods;
     private BigDecimal totalAmount;
-    private BookingStatus status;
-    private String paymentMethod;
-    private List<TicketResponse> tickets;
+    private String status;
+    private String paymentStatus;
+    private String paymentUrl;
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FoodItemResponse {
+        private String itemName;
+        private Integer quantity;
+        private BigDecimal price;
+    }
 }

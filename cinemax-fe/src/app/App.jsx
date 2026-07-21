@@ -5,8 +5,8 @@ import LoginPage from '@/features/auth/pages/LoginPage'
 import RegisterPage from '@/features/auth/pages/RegisterPage'
 import MovieCatalogPage from '@/features/public/pages/MovieCatalogPage'
 import MovieDetailsPage from '@/features/public/pages/MovieDetailsPage'
-import SeatingChartPage from '@/features/public/pages/SeatingChartPage'
-import BookingHistoryPage from '@/features/public/pages/BookingHistoryPage'
+import BookingPage from '@/features/customer/pages/BookingPage'
+import PaymentCallbackPage from '@/features/customer/pages/PaymentCallbackPage'
 import CustomerProfilePage from '@/features/public/pages/CustomerProfilePage'
 import ViewListOfScreeningMovies from '@/features/staff/pages/ViewListOfScreeningMovies'
 import MovieScheduleDetail from '@/features/staff/pages/MovieScheduleDetail'
@@ -15,9 +15,6 @@ import FoodDrinkListPage from '@/features/staff/pages/FoodDrinkListPage'
 import RoomListPage from '@/features/staff/pages/RoomListPage'
 import RoomDetailPage from '@/features/staff/pages/RoomDetailPage'
 import StaffProfilePage from '@/features/staff/pages/StaffProfilePage'
-import AdminMovieManagement from '@/features/admin/pages/AdminMovieManagement'
-import AdminUserManagement from '@/features/admin/pages/AdminUserManagement'
-import AdminConcessionManagement from '@/features/admin/pages/AdminConcessionManagement'
 
 // A wrapper that prevents Staff and Admin users from entering Customer pages
 const CustomerRoute = ({ children }) => {
@@ -55,27 +52,18 @@ function App() {
         }
       />
 
-      {/* Customer Protected Pages */}
+      {/* Booking & Payment (VNPAY) - guest checkout, no login required */}
       <Route
         path="/booking/:scheduleId"
         element={
-          <ProtectedRoute>
-            <CustomerRoute>
-              <SeatingChartPage />
-            </CustomerRoute>
-          </ProtectedRoute>
+          <CustomerRoute>
+            <BookingPage />
+          </CustomerRoute>
         }
       />
-      <Route
-        path="/history"
-        element={
-          <ProtectedRoute>
-            <CustomerRoute>
-              <BookingHistoryPage />
-            </CustomerRoute>
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/payment-callback" element={<PaymentCallbackPage />} />
+
+      {/* Customer Protected Pages */}
       <Route
         path="/profile"
         element={
@@ -149,33 +137,6 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
             <StaffProfilePage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Protected Admin Routes */}
-      <Route path="/admin" element={<Navigate to="/admin/movies" replace />} />
-      <Route
-        path="/admin/movies"
-        element={
-          <ProtectedRoute allowedRoles={['ADMIN']}>
-            <AdminMovieManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/users"
-        element={
-          <ProtectedRoute allowedRoles={['ADMIN']}>
-            <AdminUserManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/concessions"
-        element={
-          <ProtectedRoute allowedRoles={['ADMIN']}>
-            <AdminConcessionManagement />
           </ProtectedRoute>
         }
       />

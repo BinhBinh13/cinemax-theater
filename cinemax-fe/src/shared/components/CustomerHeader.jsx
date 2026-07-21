@@ -44,18 +44,6 @@ const CustomerHeader = () => {
               <>
                 <Nav.Link
                   as={NavLink}
-                  to="/history"
-                  style={({ isActive }) => ({
-                    color: isActive ? '#e50914' : '#495057',
-                    fontWeight: isActive ? '600' : '400',
-                    transition: 'color 0.2s',
-                  })}
-                  className="px-3"
-                >
-                  Lịch Sử Đặt Vé
-                </Nav.Link>
-                <Nav.Link
-                  as={NavLink}
                   to="/profile"
                   style={({ isActive }) => ({
                     color: isActive ? '#e50914' : '#495057',
