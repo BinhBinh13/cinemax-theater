@@ -7,6 +7,7 @@ import MovieCatalogPage from '@/features/public/pages/MovieCatalogPage'
 import MovieDetailsPage from '@/features/public/pages/MovieDetailsPage'
 import BookingPage from '@/features/customer/pages/BookingPage'
 import PaymentCallbackPage from '@/features/customer/pages/PaymentCallbackPage'
+import BookingHistoryPage from '@/features/public/pages/BookingHistoryPage'
 import CustomerProfilePage from '@/features/public/pages/CustomerProfilePage'
 import ViewListOfScreeningMovies from '@/features/staff/pages/ViewListOfScreeningMovies'
 import MovieScheduleDetail from '@/features/staff/pages/MovieScheduleDetail'
@@ -52,18 +53,35 @@ function App() {
         }
       />
 
-      {/* Booking & Payment (VNPAY) - guest checkout, no login required */}
+      {/* Customer Protected Pages */}
       <Route
         path="/booking/:scheduleId"
         element={
-          <CustomerRoute>
-            <BookingPage />
-          </CustomerRoute>
+          <ProtectedRoute>
+            <CustomerRoute>
+              <BookingPage />
+            </CustomerRoute>
+          </ProtectedRoute>
         }
       />
-      <Route path="/payment-callback" element={<PaymentCallbackPage />} />
-
-      {/* Customer Protected Pages */}
+      <Route
+        path="/payment-callback"
+        element={
+          <ProtectedRoute>
+            <PaymentCallbackPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <CustomerRoute>
+              <BookingHistoryPage />
+            </CustomerRoute>
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/profile"
         element={

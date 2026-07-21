@@ -1,5 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.booking.services;
 
+import fu.se.cinemaxtheaterbe.entity.User;
 import fu.se.cinemaxtheaterbe.entity.enums.SeatType;
 import fu.se.cinemaxtheaterbe.entity.theater.Booking;
 import fu.se.cinemaxtheaterbe.entity.theater.BookingFood;
@@ -7,6 +8,7 @@ import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
 import fu.se.cinemaxtheaterbe.entity.theater.Seat;
 import fu.se.cinemaxtheaterbe.entity.theater.TheaterStock;
 import fu.se.cinemaxtheaterbe.entity.theater.Ticket;
+import fu.se.cinemaxtheaterbe.features.auth.repositories.UserRepository;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingRequest;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingResponse;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.ScheduleSeatResponse;
@@ -43,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
     private final MovieScheduleRepository scheduleRepository;
     private final SeatRepository seatRepository;
     private final TheaterStockRepository stockRepository;
+    private final UserRepository userRepository;
 
     @Value("${vnpay.tmn-code}")
     private String tmnCode;
@@ -84,15 +87,19 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse createBooking(BookingRequest request, String ipAddress) {
+    public BookingResponse createBooking(BookingRequest request, String ipAddress, String username) {
         Schedule schedule = scheduleRepository.findById(request.getScheduleId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found"));
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found: " + username));
 
         List<Long> occupiedSeatIds = ticketRepository.findOccupiedSeatIdsByScheduleId(schedule.getId());
         BigDecimal basePrice = schedule.getPrice() != null ? schedule.getPrice() : new BigDecimal("90000");
 
         Booking booking = Booking.builder()
                 .schedule(schedule)
+                .user(user)
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .phone(request.getPhone())
@@ -216,6 +223,14 @@ public class BookingServiceImpl implements BookingService {
 
         Booking updatedBooking = bookingRepository.save(booking);
         return mapToResponse(updatedBooking, null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookingResponse> getBookingHistory(String username) {
+        return bookingRepository.findByUser_UsernameOrderByBookingDateDesc(username).stream()
+                .map(booking -> mapToResponse(booking, null))
+                .toList();
     }
 
     private BigDecimal calculateSeatPrice(BigDecimal basePrice, SeatType seatType) {
@@ -351,6 +366,8 @@ public class BookingServiceImpl implements BookingService {
                 .totalAmount(booking.getTotalAmount())
                 .status(booking.getStatus())
                 .paymentStatus(booking.getPaymentStatus())
+                .paymentMethod(booking.getPaymentMethod())
+                .bookingDate(booking.getBookingDate())
                 .paymentUrl(paymentUrl)
                 .build();
     }

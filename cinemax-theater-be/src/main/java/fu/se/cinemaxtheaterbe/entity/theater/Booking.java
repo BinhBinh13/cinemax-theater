@@ -1,6 +1,7 @@
 package fu.se.cinemaxtheaterbe.entity.theater;
 
 import fu.se.cinemaxtheaterbe.entity.Auditable;
+import fu.se.cinemaxtheaterbe.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,10 @@ public class Booking extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id")
     private Schedule schedule;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 
     @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(150)")
     private String fullName;

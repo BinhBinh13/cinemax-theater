@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface BookingService {
     List<ScheduleSeatResponse> getScheduleSeats(Long scheduleId);
-    BookingResponse createBooking(BookingRequest request, String ipAddress);
+    BookingResponse createBooking(BookingRequest request, String ipAddress, String username);
     BookingResponse verifyPayment(Map<String, String> vnpayParams);
+    List<BookingResponse> getBookingHistory(String username);
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,8 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request,
-                                                         HttpServletRequest servletRequest) {
+                                                         HttpServletRequest servletRequest,
+                                                         Principal principal) {
         String ipAddress = servletRequest.getHeader("X-FORWARDED-FOR");
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = servletRequest.getRemoteAddr();
@@ -39,11 +41,16 @@ public class BookingController {
             ipAddress = "127.0.0.1";
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(bookingService.createBooking(request, ipAddress));
+                .body(bookingService.createBooking(request, ipAddress, principal.getName()));
     }
 
     @GetMapping("/verify-payment")
     public ResponseEntity<BookingResponse> verifyPayment(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(bookingService.verifyPayment(params));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<BookingResponse>> getBookingHistory(Principal principal) {
+        return ResponseEntity.ok(bookingService.getBookingHistory(principal.getName()));
     }
 }

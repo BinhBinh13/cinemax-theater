@@ -24,3 +24,8 @@ export async function getScheduleById(scheduleId) {
   const response = await axiosClient.get(`/api/v1/schedules/${scheduleId}`);
   return response.data;
 }
+
+export async function getBookingHistory() {
+  const response = await axiosClient.get('/api/v1/bookings/history');
+  return response.data;
+}

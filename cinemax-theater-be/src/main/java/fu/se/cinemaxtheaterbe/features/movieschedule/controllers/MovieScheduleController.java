@@ -3,9 +3,11 @@ package fu.se.cinemaxtheaterbe.features.movieschedule.controllers;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleRequest;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleResponse;
 import fu.se.cinemaxtheaterbe.features.movieschedule.services.MovieScheduleService;
+import fu.se.cinemaxtheaterbe.features.room.dtos.RoomResponse;
 import fu.se.cinemaxtheaterbe.utils.ApiPath;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -36,6 +40,15 @@ public class MovieScheduleController {
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable Long id) {
         return ResponseEntity.ok(scheduleService.getScheduleById(id));
+    }
+
+    @GetMapping("/available-rooms")
+    public ResponseEntity<List<RoomResponse>> getAvailableRooms(
+            @RequestParam Long movieId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam(required = false) Long excludeScheduleId) {
+        return ResponseEntity.ok(scheduleService.getAvailableRooms(movieId, date, startTime, excludeScheduleId));
     }
 
     @PostMapping

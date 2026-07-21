@@ -8,6 +8,7 @@ import {
   createSchedule,
   updateSchedule,
   deleteSchedule,
+  getAvailableRooms,
 } from '../services/movieService'
 
 function formatDate(dateStr) {
@@ -60,6 +61,8 @@ export default function MovieScheduleDetail() {
   const [formError, setFormError] = useState('')
   const [editingSchedule, setEditingSchedule] = useState(null)
   const [form, setForm] = useState(emptyForm)
+  const [availableRooms, setAvailableRooms] = useState([])
+  const [loadingRooms, setLoadingRooms] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -84,6 +87,34 @@ export default function MovieScheduleDetail() {
       mounted = false
     }
   }, [movieId])
+
+  // Re-fetch the rooms that are free (active + no schedule conflict) whenever
+  // the modal is open and both date and start time are chosen.
+  useEffect(() => {
+    if (!showModal || !form.date || !form.startTime) {
+      setAvailableRooms([])
+      return
+    }
+
+    let mounted = true
+    setLoadingRooms(true)
+    setAvailableRooms([])
+
+    getAvailableRooms(movieId, form.date, form.startTime, editingSchedule?.id)
+      .then((response) => {
+        if (mounted) setAvailableRooms(response.data)
+      })
+      .catch(() => {
+        if (mounted) setAvailableRooms([])
+      })
+      .finally(() => {
+        if (mounted) setLoadingRooms(false)
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [showModal, movieId, form.date, form.startTime, editingSchedule])
 
   async function reloadSchedules() {
     const response = await getScheduleByMovieId(movieId)
@@ -265,7 +296,7 @@ export default function MovieScheduleDetail() {
                 min={movie?.screeningStart}
                 max={movie?.screeningEnd}
                 value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                onChange={(e) => setForm({ ...form, date: e.target.value, roomId: '' })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -274,21 +305,32 @@ export default function MovieScheduleDetail() {
                 type="time"
                 required
                 value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                onChange={(e) => setForm({ ...form, startTime: e.target.value, roomId: '' })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Room ID</Form.Label>
-              <Form.Control
-                type="number"
+              <Form.Label>Room</Form.Label>
+              <Form.Select
                 required
-                min={1}
+                disabled={!form.date || !form.startTime || loadingRooms}
                 value={form.roomId}
                 onChange={(e) => setForm({ ...form, roomId: e.target.value })}
-              />
-              <Form.Text className="text-muted">
-                Temporary numeric input — no Room list API yet to show a proper dropdown.
-              </Form.Text>
+              >
+                <option value="">
+                  {!form.date || !form.startTime
+                    ? 'Select a date and start time first...'
+                    : loadingRooms
+                    ? 'Loading available rooms...'
+                    : availableRooms.length === 0
+                    ? 'No rooms available at this time'
+                    : 'Select a room...'}
+                </option>
+                {availableRooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    {room.name} ({room.seatCount} seats)
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

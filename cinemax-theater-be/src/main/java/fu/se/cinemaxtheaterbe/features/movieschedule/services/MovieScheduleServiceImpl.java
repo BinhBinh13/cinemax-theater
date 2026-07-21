@@ -10,6 +10,8 @@ import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleRequest;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleResponse;
 import fu.se.cinemaxtheaterbe.features.movieschedule.mappers.ScheduleMapper;
 import fu.se.cinemaxtheaterbe.features.movieschedule.repositories.MovieScheduleRepository;
+import fu.se.cinemaxtheaterbe.features.room.dtos.RoomResponse;
+import fu.se.cinemaxtheaterbe.features.room.mappers.RoomMapper;
 import fu.se.cinemaxtheaterbe.features.room.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -29,6 +32,7 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
     private final MovieScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
     private final ScheduleMapper scheduleMapper;
 
     @Override
@@ -159,14 +163,29 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
     }
 
     private void validateNoConflict(Long roomId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId) {
-        LocalDateTime checkStart = startTime.minusMinutes(15);
-        LocalDateTime checkEnd = endTime.plusMinutes(15);
-
-        List<Schedule> conflicts = scheduleRepository.findConflictingSchedules(
-                roomId, checkStart, checkEnd, excludeId);
-        if (!conflicts.isEmpty()) {
+        if (hasConflict(roomId, startTime, endTime, excludeId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Room already has a schedule overlapping this time slot");
         }
+    }
+
+    private boolean hasConflict(Long roomId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId) {
+        LocalDateTime checkStart = startTime.minusMinutes(15);
+        LocalDateTime checkEnd = endTime.plusMinutes(15);
+        return !scheduleRepository.findConflictingSchedules(roomId, checkStart, checkEnd, excludeId).isEmpty();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RoomResponse> getAvailableRooms(Long movieId, LocalDate date, LocalTime startTime, Long excludeScheduleId) {
+        Movie movie = findMovieOrThrow(movieId);
+        LocalDateTime start = LocalDateTime.of(date, startTime);
+        LocalDateTime end = computeEndTime(movie, start);
+
+        return roomRepository.findAllActive().stream()
+                .filter(room -> room.getStatus() == RoomStatus.ACTIVE)
+                .filter(room -> !hasConflict(room.getId(), start, end, excludeScheduleId))
+                .map(roomMapper::toResponse)
+                .toList();
     }
 
     private Schedule findScheduleOrThrow(Long id) {

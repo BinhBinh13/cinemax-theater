@@ -48,6 +48,12 @@ export function updateSchedule(scheduleId, payload) {
   return axiosClient.put(`/api/v1/schedules/${scheduleId}`, payload)
 }
 
+export function getAvailableRooms(movieId, date, startTime, excludeScheduleId) {
+  return axiosClient.get('/api/v1/schedules/available-rooms', {
+    params: { movieId, date, startTime, excludeScheduleId },
+  })
+}
+
 export function deleteSchedule(scheduleId) {
   return axiosClient.delete(`/api/v1/schedules/${scheduleId}`)
 }

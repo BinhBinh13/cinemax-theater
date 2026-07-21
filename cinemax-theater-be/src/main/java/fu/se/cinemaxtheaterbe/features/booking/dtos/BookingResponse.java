@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,6 +29,8 @@ public class BookingResponse {
     private BigDecimal totalAmount;
     private String status;
     private String paymentStatus;
+    private String paymentMethod;
+    private LocalDateTime bookingDate;
     private String paymentUrl;
 
     @Getter

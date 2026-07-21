@@ -35,13 +35,20 @@ const LoginPage = () => {
     setLocalLoading(true)
     try {
       const loggedInUser = await login(usernameOrEmail, password)
-      
+
+      // If the user was redirected here from a protected page (e.g. booking a
+      // seat), send them back there instead of the role-based default.
+      if (location.state?.from) {
+        navigate(from, { replace: true })
+        return
+      }
+
       // Redirect based on roles
       const roles = loggedInUser.roles || []
-      const isStaffOrAdmin = roles.some(role => 
+      const isStaffOrAdmin = roles.some(role =>
         role.toUpperCase() === 'ROLE_STAFF' || role.toUpperCase() === 'ROLE_ADMIN'
       )
-      
+
       if (isStaffOrAdmin) {
         navigate('/staff/movies', { replace: true })
       } else {
