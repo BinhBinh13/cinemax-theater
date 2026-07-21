@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { getMovieById, getScheduleByMovieId } from '@/features/staff/services/movieService'
 import CustomerHeader from '@/shared/components/CustomerHeader'
+import { useLanguage } from '@/app/providers/LanguageProvider'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -17,6 +18,7 @@ const MovieDetailsPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const MovieDetailsPage = () => {
   const groupedSchedules = groupSchedulesByDate()
 
   return (
-    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
+    <div className="cinemax-page-container text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
@@ -93,11 +95,12 @@ const MovieDetailsPage = () => {
               {/* Breadcrumb / Back button */}
               <div className="mb-4">
                 <Button 
-                  variant="link" 
-                  className="text-secondary p-0 text-decoration-none"
+                  variant="outline-danger" 
+                  size="sm"
+                  className="fw-bold px-3 py-1.5 d-inline-flex align-items-center gap-2 bg-white shadow-sm"
                   onClick={() => navigate('/')}
                 >
-                  ← Quay lại danh sách phim
+                  🏠 {t('backToHome')}
                 </Button>
               </div>
 

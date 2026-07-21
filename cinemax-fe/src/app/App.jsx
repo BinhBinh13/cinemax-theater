@@ -5,8 +5,9 @@ import LoginPage from '@/features/auth/pages/LoginPage'
 import RegisterPage from '@/features/auth/pages/RegisterPage'
 import MovieCatalogPage from '@/features/public/pages/MovieCatalogPage'
 import MovieDetailsPage from '@/features/public/pages/MovieDetailsPage'
-import BookingPage from '@/features/customer/pages/BookingPage'
-import PaymentCallbackPage from '@/features/customer/pages/PaymentCallbackPage'
+import TheaterRoomsPage from '@/features/public/pages/TheaterRoomsPage'
+import SeatingChartPage from '@/features/public/pages/SeatingChartPage'
+import BookingHistoryPage from '@/features/public/pages/BookingHistoryPage'
 import CustomerProfilePage from '@/features/public/pages/CustomerProfilePage'
 import ViewListOfScreeningMovies from '@/features/staff/pages/ViewListOfScreeningMovies'
 import MovieScheduleDetail from '@/features/staff/pages/MovieScheduleDetail'
@@ -15,13 +16,19 @@ import FoodDrinkListPage from '@/features/staff/pages/FoodDrinkListPage'
 import RoomListPage from '@/features/staff/pages/RoomListPage'
 import RoomDetailPage from '@/features/staff/pages/RoomDetailPage'
 import StaffProfilePage from '@/features/staff/pages/StaffProfilePage'
+import AdminUserManagement from '@/features/admin/pages/AdminUserManagement'
 
 // A wrapper that prevents Staff and Admin users from entering Customer pages
 const CustomerRoute = ({ children }) => {
   const { isAuthenticated, hasRole } = useAuth()
 
-  if (isAuthenticated && (hasRole('STAFF') || hasRole('ADMIN'))) {
-    return <Navigate to="/staff/movies" replace />
+  if (isAuthenticated) {
+    if (hasRole('ADMIN')) {
+      return <Navigate to="/admin/users" replace />
+    }
+    if (hasRole('STAFF')) {
+      return <Navigate to="/staff/movies" replace />
+    }
   }
 
   return children
@@ -44,6 +51,14 @@ function App() {
         }
       />
       <Route
+        path="/theaters"
+        element={
+          <CustomerRoute>
+            <TheaterRoomsPage />
+          </CustomerRoute>
+        }
+      />
+      <Route
         path="/movies/:movieId"
         element={
           <CustomerRoute>
@@ -52,18 +67,27 @@ function App() {
         }
       />
 
-      {/* Booking & Payment (VNPAY) - guest checkout, no login required */}
+      {/* Customer Protected Pages */}
       <Route
         path="/booking/:scheduleId"
         element={
-          <CustomerRoute>
-            <BookingPage />
-          </CustomerRoute>
+          <ProtectedRoute>
+            <CustomerRoute>
+              <SeatingChartPage />
+            </CustomerRoute>
+          </ProtectedRoute>
         }
       />
-      <Route path="/payment-callback" element={<PaymentCallbackPage />} />
-
-      {/* Customer Protected Pages */}
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <CustomerRoute>
+              <BookingHistoryPage />
+            </CustomerRoute>
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/profile"
         element={
@@ -75,11 +99,11 @@ function App() {
         }
       />
 
-      {/* Protected Staff/Admin Routes */}
+      {/* Protected Staff Routes (Only STAFF role) */}
       <Route
         path="/staff/movies/new"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <MovieFormPage />
           </ProtectedRoute>
         }
@@ -87,7 +111,7 @@ function App() {
       <Route
         path="/staff/movies/:movieId/edit"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <MovieFormPage />
           </ProtectedRoute>
         }
@@ -95,7 +119,7 @@ function App() {
       <Route
         path="/staff/movies/:movieId"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <MovieScheduleDetail />
           </ProtectedRoute>
         }
@@ -103,7 +127,7 @@ function App() {
       <Route
         path="/staff/movies"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <ViewListOfScreeningMovies />
           </ProtectedRoute>
         }
@@ -111,7 +135,7 @@ function App() {
       <Route
         path="/staff/food-drinks"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <FoodDrinkListPage />
           </ProtectedRoute>
         }
@@ -119,7 +143,7 @@ function App() {
       <Route
         path="/staff/rooms"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <RoomListPage />
           </ProtectedRoute>
         }
@@ -127,7 +151,7 @@ function App() {
       <Route
         path="/staff/rooms/:roomId"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <RoomDetailPage />
           </ProtectedRoute>
         }
@@ -135,13 +159,24 @@ function App() {
       <Route
         path="/staff/profile"
         element={
-          <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+          <ProtectedRoute allowedRoles={['STAFF']}>
             <StaffProfilePage />
           </ProtectedRoute>
         }
       />
 
-      {/* Fallback - redirect to catalog home */}
+      {/* Protected Admin Routes (Only ADMIN role) */}
+      <Route path="/admin" element={<Navigate to="/admin/users" replace />} />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <AdminUserManagement />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Fallback - redirect based on user role */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

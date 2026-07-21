@@ -2,48 +2,44 @@ package fu.se.cinemaxtheaterbe.features.booking.controllers;
 
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingRequest;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingResponse;
-import fu.se.cinemaxtheaterbe.features.booking.dtos.ScheduleSeatResponse;
 import fu.se.cinemaxtheaterbe.features.booking.services.BookingService;
-import fu.se.cinemaxtheaterbe.utils.ApiPath;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping(ApiPath.BOOKINGS)
+@RequestMapping("/api/v1")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
 
-    @GetMapping("/schedules/{scheduleId}/seats")
-    public ResponseEntity<List<ScheduleSeatResponse>> getScheduleSeats(@PathVariable Long scheduleId) {
-        return ResponseEntity.ok(bookingService.getScheduleSeats(scheduleId));
+    @GetMapping("/schedules/{scheduleId}/occupied-seats")
+    public ResponseEntity<List<Long>> getOccupiedSeats(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(bookingService.getOccupiedSeatIds(scheduleId));
     }
 
-    @PostMapping
-    public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request,
-                                                         HttpServletRequest servletRequest) {
-        String ipAddress = servletRequest.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = servletRequest.getRemoteAddr();
+    @PostMapping("/bookings")
+    public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        // Normalize IPv6 localhost loopback for VNPAY compatibility if needed
-        if ("0:0:0:0:0:0:0:1".equals(ipAddress)) {
-            ipAddress = "127.0.0.1";
-        }
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(bookingService.createBooking(request, ipAddress));
+        String username = principal.getName();
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(request, username));
     }
 
-    @GetMapping("/verify-payment")
-    public ResponseEntity<BookingResponse> verifyPayment(@RequestParam Map<String, String> params) {
-        return ResponseEntity.ok(bookingService.verifyPayment(params));
+    @GetMapping("/bookings/history")
+    public ResponseEntity<List<BookingResponse>> getBookingHistory(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = principal.getName();
+        return ResponseEntity.ok(bookingService.getUserBookingHistory(username));
     }
 }

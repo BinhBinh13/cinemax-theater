@@ -1,194 +1,317 @@
+/* ==========================================
+   CINEMAX THEME DESIGN SYSTEM & UTILITIES
+   ========================================== */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --cinemax-red: #e50914;
+  --cinemax-dark-red: #b80710;
+  --cinemax-cream: #fdfcf0;
+  --cinemax-cream-dark: #f2efe9;
+  --cinemax-dark: #222222;
+  --cinemax-black: #111111;
+  --cinemax-gold: #e0a800;
+  --cinemax-brick: #b25232;
+  --cinemax-border: #e2dfd7;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --sans: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --heading: 'Segoe UI', Roboto, sans-serif;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  color: #333333;
+  background-color: var(--cinemax-cream);
 }
 
 body {
   margin: 0;
+  padding: 0;
+  background: #231d1b url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30"><rect width="58" height="13" x="1" y="1" fill="%238a381f" rx="1"/><rect width="28" height="13" x="1" y="16" fill="%23772f19" rx="1"/><rect width="28" height="13" x="31" y="16" fill="%23772f19" rx="1"/></svg>') repeat;
+  font-family: var(--sans);
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
+  min-height: 100vh;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
-#root {
-  text-align: left;
-  width: 100%;
-  max-width: 100%;
-  border-inline: none;
-}
-
-/* Cinemax Premium Theme Extensions (light) */
-.cinema-bg {
-  background: linear-gradient(180deg, #ffffff 0%, #f4f5f7 100%);
+/* CINEMAX Layout Container */
+.cinemax-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--cinemax-cream);
   min-height: 100vh;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  border-left: 2px solid #57291a;
+  border-right: 2px solid #57291a;
 }
 
-.glass-card {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 8px 24px 0 rgba(17, 24, 39, 0.08) !important;
-  border-radius: 16px;
-  color: #111827 !important;
+/* Perforated Film Strip Borders */
+.film-strip-border {
+  height: 12px;
+  background-color: var(--cinemax-red);
+  background-image: radial-gradient(#ffffff 35%, transparent 40%);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+  background-position: center;
+  border-top: 1px solid #a00d20;
+  border-bottom: 1px solid #a00d20;
 }
 
-.neon-btn {
-  background: linear-gradient(135deg, #e50914 0%, #b80710 100%);
-  border: none;
-  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.3);
-  transition: all 0.3s ease;
-  font-weight: 600;
-  color: #fff;
+/* CINEMAX Header Styles */
+.cinemax-top-utility {
+  background-color: #fdfcf0;
+  font-size: 12px;
+  border-bottom: 1px solid #e8e5dc;
+  padding: 6px 0;
 }
 
-.neon-btn:hover {
-  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.45);
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #ff0f1b 0%, #e50914 100%);
+.cinemax-top-utility a {
+  color: #555555;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
-.cinema-input {
-  background: #ffffff !important;
-  border: 1px solid #d1d5db !important;
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
-  transition: all 0.3s ease;
+.cinemax-top-utility a:hover {
+  color: var(--cinemax-red);
 }
 
-.cinema-input:focus {
-  background: #ffffff !important;
-  border-color: #e50914 !important;
-  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15) !important;
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
+.cinemax-main-navbar {
+  background-color: #fdfcf0;
+  padding: 12px 0;
 }
 
-.cinema-input:disabled,
-.cinema-input[disabled],
-.cinema-input.disabled {
-  background: #f3f4f6 !important;
-  color: rgba(17, 24, 39, 0.45) !important;
-  -webkit-text-fill-color: rgba(17, 24, 39, 0.45) !important;
-  border: 1px solid #e5e7eb !important;
-  cursor: not-allowed;
+.cinemax-logo-text {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--cinemax-red);
+  letter-spacing: 1px;
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 1px 1px 0px #8a0b1c;
+  display: inline-flex;
+  align-items: center;
 }
 
-.cinema-input:-webkit-autofill,
-.cinema-input:-webkit-autofill:hover,
-.cinema-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #111827 !important;
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-  transition: background-color 5000s ease-in-out 0s;
+.cinemax-logo-star {
+  color: var(--cinemax-gold);
+  font-size: 24px;
+  margin-left: 2px;
+  transform: translateY(-8px);
+}
+
+.cinemax-nav-link {
+  font-weight: 700;
+  color: #222222 !important;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 8px 16px !important;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.cinemax-nav-link:hover, .cinemax-nav-link.active {
+  color: var(--cinemax-red) !important;
+}
+
+.cinemax-dropdown-nav .dropdown-toggle {
+  font-weight: 700;
+  color: #222222 !important;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 8px 16px !important;
+  transition: color 0.2s;
+}
+
+.cinemax-dropdown-nav .dropdown-toggle:hover {
+  color: var(--cinemax-red) !important;
+}
+
+.cinemax-dropdown-nav:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+
+.cinemax-dropdown-nav .dropdown-menu {
+  border: 2px solid var(--cinemax-red);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  background-color: #ffffff;
+  padding: 6px 0;
+}
+
+.cinemax-dropdown-nav .dropdown-item {
+  font-size: 14px;
+  color: #222222;
+  transition: all 0.2s ease;
+}
+
+.cinemax-dropdown-nav .dropdown-item:hover {
+  background-color: #fdfcf0;
+  color: var(--cinemax-red);
+  padding-left: 20px;
+}
+
+.cinemax-nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background-color: var(--cinemax-red);
+  border-radius: 2px;
+}
+
+/* Red Ticket Button */
+.cinemax-btn-ticket {
+  background: linear-gradient(180deg, #e50914 0%, #b80710 100%);
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: 4px;
+  padding: 6px 14px;
+  border: 1px solid #8d0012;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.cinemax-btn-ticket:hover {
+  background: linear-gradient(180deg, #ff1e3d 0%, #e50914 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(229,9,20,0.4);
+}
+
+/* Movie Selection Retro Title */
+.cinemax-section-title {
+  text-align: center;
+  position: relative;
+  margin: 35px 0 25px 0;
+}
+
+.cinemax-section-title h3 {
+  display: inline-block;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 34px;
+  letter-spacing: 2px;
+  color: #222222;
+  text-transform: uppercase;
+  background-color: var(--cinemax-cream);
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.cinemax-section-title::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top: 1px solid #222222;
+  border-bottom: 1px solid #222222;
+  z-index: 0;
+}
+
+/* Movie Cards - Poster Frame Style */
+.cinemax-movie-card {
+  background: #ffffff;
+  border: 1px solid #e0ddd5;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.cinemax-movie-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(229, 9, 20, 0.2);
+  border-color: var(--cinemax-red);
+}
+
+.cinemax-poster-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 145%;
+  overflow: hidden;
+  background: #111;
+}
+
+.cinemax-poster-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cinemax-movie-card:hover .cinemax-poster-img {
+  transform: scale(1.06);
+}
+
+.cinemax-movie-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cinemax-movie-card:hover .cinemax-movie-overlay {
+  opacity: 1;
+}
+
+/* CINEMAX Auth Card (Login / Register) */
+.cinemax-auth-wrapper {
+  background: #ffffff;
+  border: 2px solid var(--cinemax-red);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+.cinemax-auth-header {
+  background: linear-gradient(135deg, var(--cinemax-red) 0%, var(--cinemax-dark-red) 100%);
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+/* CINEMAX Footer */
+.cinemax-footer {
+  background-color: #fdfcf0;
+  border-top: 2px solid #222222;
+  padding: 40px 0 20px 0;
+  font-size: 13px;
+  color: #555555;
+}
+
+.cinemax-footer-bottom {
+  background-color: #1a1514;
+  color: #aaaaaa;
+  padding: 15px 0;
+  font-size: 12px;
+  text-align: center;
+  border-top: 4px solid var(--cinemax-red);
 }
 
 .text-gold {
-  color: #a67c00;
-}
-
-.cinema-logo {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.cinema-footer {
-  background: #f8f9fa;
+  color: var(--cinemax-gold) !important;
 }

@@ -4,9 +4,9 @@ import fu.se.cinemaxtheaterbe.entity.theater.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    Optional<Booking> findByTxnRef(String txnRef);
+    List<Booking> findByUserIdOrderByBookingTimeDesc(Long userId);
 }

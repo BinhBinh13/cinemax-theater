@@ -9,6 +9,8 @@ function toMovieViewModel(movie) {
     id: movie.id,
     title: movie.title,
     poster: movie.posterUrl,
+    posterUrl: movie.posterUrl,
+    description: movie.description,
     duration: movie.durationMinutes,
     screeningStart: movie.releaseDate,
     screeningEnd: movie.endDate,

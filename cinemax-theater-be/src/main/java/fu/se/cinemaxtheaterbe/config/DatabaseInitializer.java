@@ -205,51 +205,70 @@ public class DatabaseInitializer implements CommandLineRunner {
             log.info("Seeded {} seats in total for Room 1 & Room 2", seatsToSave.size());
         }
 
-        // 8. Seed Movies
-        Movie movie1;
-        Movie movie2;
-        Movie movie3;
-        if (movieRepository.count() == 0) {
-            movie1 = Movie.builder()
-                    .title("Inception")
-                    .durationMinutes(148)
-                    .description("Kẻ trích xuất giấc mơ - Kịch bản khoa học viễn tưởng đỉnh cao của đạo diễn Christopher Nolan.")
-                    .posterUrl("https://image.tmdb.org/t/p/original/qmDp59hUgRStpeAfAlsbHGTYMvj.jpg")
-                    .releaseDate(LocalDate.now().minusDays(10))
-                    .endDate(LocalDate.now().plusDays(20))
-                    .status(MovieStatus.NOW_SHOWING)
-                    .build();
-            movie1 = movieRepository.save(movie1);
+        // 8. Seed 20 Movies
+        Movie movie1 = createMovieIfNotFound("Inception", 148, 
+                "Kẻ trích xuất giấc mơ - Kịch bản khoa học viễn tưởng đỉnh cao của đạo diễn Christopher Nolan.", 
+                "/images/Inception_poster_1.jpg", LocalDate.now().minusDays(10), LocalDate.now().plusDays(20), MovieStatus.NOW_SHOWING);
+        Movie movie2 = createMovieIfNotFound("Interstellar", 169, 
+                "Hố đen vũ trụ - Hành trình đi tìm hành tinh sống mới ngoài không gian đầy nghẹt thở.", 
+                "/images/Interstellar_poster.jpg", LocalDate.now().minusDays(5), LocalDate.now().plusDays(25), MovieStatus.NOW_SHOWING);
+        Movie movie3 = createMovieIfNotFound("Avengers: Endgame", 181, 
+                "Biệt đội siêu anh hùng: Hồi kết - Trận chiến lịch sử chống lại ác nhân Thanos cứu vũ trụ.", 
+                "/images/Avengers_Endgame_bia_teaser.jpg", LocalDate.now().plusDays(1), LocalDate.now().plusDays(30), MovieStatus.COMING_SOON);
 
-            movie2 = Movie.builder()
-                    .title("Interstellar")
-                    .durationMinutes(169)
-                    .description("Hố đen vũ trụ - Hành trình đi tìm hành tinh sống mới ngoài không gian đầy nghẹt thở.")
-                    .posterUrl("https://image.tmdb.org/t/p/original/gEU2QvHOm42GCv7et24Jif1jGv1.jpg")
-                    .releaseDate(LocalDate.now().minusDays(5))
-                    .endDate(LocalDate.now().plusDays(25))
-                    .status(MovieStatus.NOW_SHOWING)
-                    .build();
-            movie2 = movieRepository.save(movie2);
+        createMovieIfNotFound("Dune: Part Two", 166, 
+                "Hành Tinh Cát 2 - Paul Atreides hợp lực cùng Chani và người Fremen để trả thù những kẻ hủy hoại gia đình anh.", 
+                "/images/dune2.jpg", LocalDate.now().minusDays(3), LocalDate.now().plusDays(27), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Oppenheimer", 180, 
+                "Câu chuyện về nhà vật lý lý thuyết J. Robert Oppenheimer và vai trò của ông trong Dự án Manhattan.", 
+                "/images/oppenheimer.jpg", LocalDate.now().minusDays(12), LocalDate.now().plusDays(18), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Spider-Man: Across the Spider-Verse", 140, 
+                "Miles Morales du hành qua đa vũ trụ nhện và đối mặt với một đội ngũ Người Nhện bảo vệ sự tồn vong của thực tại.", 
+                "/images/spidermanverse.jpg", LocalDate.now().minusDays(8), LocalDate.now().plusDays(22), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Avatar: The Way of Water", 192, 
+                "Jake Sully và Neytiri khám phá các vùng biển của Pandora để bảo vệ gia đình trước mối đe dọa mới.", 
+                "/images/avatarwayofwater.jpg", LocalDate.now().minusDays(15), LocalDate.now().plusDays(15), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Top Gun: Maverick", 130, 
+                "Pete 'Maverick' Mitchell huấn luyện một đội phi công trẻ cho một nhiệm vụ chuyên biệt nguy hiểm.", 
+                "/images/topgunmaverick.jpg", LocalDate.now().minusDays(20), LocalDate.now().plusDays(10), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("The Batman", 176, 
+                "Hiệp sĩ bóng đêm điều tra vụ án giết người hàng loạt bí ẩn tại thành phố Gotham.", 
+                "/images/thebatman.jpg", LocalDate.now().minusDays(14), LocalDate.now().plusDays(16), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Joker: Folie à Deux", 138, 
+                "Cuộc hành trình điên rộn mới của Arthur Fleck và Harleen Quinzel.", 
+                "/images/JOKER_FOLIE_À_DEUX_-_Vietnam_poster.jpg", LocalDate.now().plusDays(2), LocalDate.now().plusDays(32), MovieStatus.COMING_SOON);
+        createMovieIfNotFound("Deadpool & Wolverine", 127, 
+                "Deadpool hợp lực cùng Wolverine trong cuộc phiêu lưu xuyên đa vũ trụ vô cùng hài hước và kịch tính.", 
+                "/images/deadpoolwoverine.jpg", LocalDate.now().minusDays(4), LocalDate.now().plusDays(26), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Inside Out 2", 96, 
+                "Trở lại với tâm trí của Riley khi cô bước vào tuổi dậy thì với những cảm xúc mới xuất hiện.", 
+                "/images/insideout2.jpg", LocalDate.now().minusDays(7), LocalDate.now().plusDays(23), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Kung Fu Panda 4", 94, 
+                "Po phải tìm và huấn luyện một Thần Long Đại Hiệp mới trong khi đối đầu với Tắc Kè Bông.", 
+                "/images/kungfupanda4.jpg", LocalDate.now().minusDays(18), LocalDate.now().plusDays(12), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Godzilla x Kong: The New Empire", 115, 
+                "Godzilla và Kong phải tái hợp để chống lại một mối đe dọa khổng lồ ẩn giấu trong Trái Đất Rỗng.", 
+                "/images/godzillavskongnewempire.jpg", LocalDate.now().minusDays(6), LocalDate.now().plusDays(24), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Transformers One", 104, 
+                "Câu chuyện nguồn gốc chưa từng kể về tình bạn giữa Orion Pax và D-16 trước khi trở thành kình địch.", 
+                "/images/Transformers_One_Official_Poster.jpg", LocalDate.now().plusDays(5), LocalDate.now().plusDays(35), MovieStatus.COMING_SOON);
+        createMovieIfNotFound("Despicable Me 4", 95, 
+                "Gru và gia đình đón thành viên mới Gru Jr. và đối mặt với kẻ thù mới Maxime Le Mal.", 
+                "/images/despicableme4.jpeg", LocalDate.now().minusDays(9), LocalDate.now().plusDays(21), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Moana 2", 100, 
+                "Moana và Maui tái hợp trong một chuyến đại hành trình mới vượt đại dương cùng những người đồng hành mới.", 
+                "/images/Moana_2_poster.jpg", LocalDate.now().plusDays(10), LocalDate.now().plusDays(40), MovieStatus.COMING_SOON);
+        createMovieIfNotFound("Kingdom of the Planet of the Apes", 145, 
+                "Nhiều thế hệ sau triều đại của Caesar, một chú khỉ trẻ bắt đầu hành trình quyết định tương lai khỉ và người.", 
+                "/images/Kingdom_of_Planet_of_Apes_VN_poster.jpg", LocalDate.now().minusDays(11), LocalDate.now().plusDays(19), MovieStatus.NOW_SHOWING);
+        createMovieIfNotFound("Alien: Romulus", 119, 
+                "Nhóm thanh niên khám phá một trạm vũ trụ bỏ hoang và đối mặt với hình thái sống đáng sợ nhất vũ trụ.", 
+                "/images/ALIEN_ROMULUS_–_Vietnam_poster.jpg", LocalDate.now().plusDays(7), LocalDate.now().plusDays(37), MovieStatus.COMING_SOON);
+        createMovieIfNotFound("Gladiator II", 148, 
+                "Lucius bước vào Đấu trường La Mã để khôi phục vinh quang cho Rome.", 
+                "/images/gladiator2.jpg", LocalDate.now().plusDays(12), LocalDate.now().plusDays(42), MovieStatus.COMING_SOON);
 
-            movie3 = Movie.builder()
-                    .title("Avengers: Endgame")
-                    .durationMinutes(181)
-                    .description("Biệt đội siêu anh hùng: Hồi kết - Trận chiến lịch sử chống lại ác nhân Thanos cứu vũ trụ.")
-                    .posterUrl("https://image.tmdb.org/t/p/original/or06seB2lUki45Rb3wwOIU8gcw4.jpg")
-                    .releaseDate(LocalDate.now().plusDays(1)) // Upcoming
-                    .endDate(LocalDate.now().plusDays(30))
-                    .status(MovieStatus.COMING_SOON)
-                    .build();
-            movie3 = movieRepository.save(movie3);
-
-            log.info("Seeded 3 movies: Inception, Interstellar, Avengers: Endgame");
-        } else {
-            List<Movie> movies = movieRepository.findAll();
-            movie1 = movies.get(0);
-            movie2 = movies.size() > 1 ? movies.get(1) : movies.get(0);
-            movie3 = movies.size() > 2 ? movies.get(2) : movies.get(0);
-        }
+        log.info("Database initialized with 20 movies in total.");
 
         // 9. Seed Schedules
         if (scheduleRepository.count() == 0) {
@@ -299,6 +318,38 @@ public class DatabaseInitializer implements CommandLineRunner {
                     Role savedRole = roleRepository.save(role);
                     log.info("Role created: {}", name);
                     return savedRole;
+                });
+    }
+
+    private Movie createMovieIfNotFound(String title, int duration, String description, String posterUrl, 
+                                        LocalDate releaseDate, LocalDate endDate, MovieStatus status) {
+        return movieRepository.findAll().stream()
+                .filter(m -> m.getTitle().equalsIgnoreCase(title))
+                .findFirst()
+                .map(existing -> {
+                    existing.setDurationMinutes(duration);
+                    existing.setDescription(description);
+                    if (posterUrl != null && !posterUrl.isEmpty()) {
+                        existing.setPosterUrl(posterUrl);
+                    }
+                    existing.setReleaseDate(releaseDate);
+                    existing.setEndDate(endDate);
+                    existing.setStatus(status);
+                    return movieRepository.save(existing);
+                })
+                .orElseGet(() -> {
+                    Movie movie = Movie.builder()
+                            .title(title)
+                            .durationMinutes(duration)
+                            .description(description)
+                            .posterUrl(posterUrl)
+                            .releaseDate(releaseDate)
+                            .endDate(endDate)
+                            .status(status)
+                            .build();
+                    Movie saved = movieRepository.save(movie);
+                    log.info("Movie created: {}", title);
+                    return saved;
                 });
     }
 }
