@@ -47,20 +47,11 @@ public class Booking extends Auditable {
     @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(name = "payment_status", nullable = false, length = 50)
-    private String paymentStatus; // PENDING, PAID, FAILED
-
-    @Column(name = "payment_method", length = 50)
-    private String paymentMethod; // VNPAY
-
-    @Column(name = "txn_ref", unique = true, length = 100)
-    private String txnRef; // Unique transaction reference for VNPAY
-
-    @Column(name = "pay_date", length = 50)
-    private String payDate;
-
     @Column(name = "status", nullable = false, length = 50)
     private String status; // PENDING, CONFIRMED, CANCELLED
+
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
