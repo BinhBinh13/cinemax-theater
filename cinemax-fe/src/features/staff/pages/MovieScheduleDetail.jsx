@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Modal, Form, Button, Alert } from 'react-bootstrap'
-import StaffSideBar from '../components/StaffSideBar'
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Modal, Form, Button, Alert } from "react-bootstrap";
+import StaffSideBar from "../components/StaffSideBar";
 import {
   getMovieById,
   getScheduleByMovieId,
@@ -9,200 +10,216 @@ import {
   updateSchedule,
   deleteSchedule,
   getAvailableRooms,
-} from '../services/movieService'
+} from "../services/movieService";
 
 function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 function formatDisplayDate(dateStr) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
-// Backend sends ISO LocalDateTime strings, e.g. "2025-07-10T09:30:00"
 function toDatePart(isoDateTime) {
-  return isoDateTime.slice(0, 10)
+  return isoDateTime.slice(0, 10);
 }
 
 function toTimePart(isoDateTime) {
-  return isoDateTime.slice(11, 16)
+  return isoDateTime.slice(11, 16);
 }
 
 const statusLabels = {
-  UPCOMING: 'Upcoming',
-  SHOWING: 'Showing now',
-  ENDED: 'Ended',
-}
+  UPCOMING: "Upcoming",
+  SHOWING: "Showing now",
+  ENDED: "Ended",
+};
 
 function groupByDate(schedules) {
-  return Object.entries(
-    schedules.reduce((acc, st) => {
-      const date = toDatePart(st.startTime)
-      if (acc[date] === undefined) acc[date] = []
-      acc[date].push(st)
-      return acc
-    }, {})
-  )
-}
+  const schedulesByDate = {};
 
-const emptyForm = { date: '', startTime: '', roomId: '' }
+  for (const schedule of schedules) {
+    const date = toDatePart(schedule.startTime);
+
+    if (schedulesByDate[date] === undefined) {
+      schedulesByDate[date] = [];
+    }
+
+    schedulesByDate[date].push(schedule);
+  }
+
+  return Object.entries(schedulesByDate);
+}
+const emptyForm = { date: "", startTime: "", roomId: "" };
 
 export default function MovieScheduleDetail() {
-  const { movieId } = useParams()
-  const [movie, setMovie] = useState(null)
-  const [schedules, setSchedules] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState('')
-  const [isError, setIsError] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const [formError, setFormError] = useState('')
-  const [editingSchedule, setEditingSchedule] = useState(null)
-  const [form, setForm] = useState(emptyForm)
-  const [availableRooms, setAvailableRooms] = useState([])
-  const [loadingRooms, setLoadingRooms] = useState(false)
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [schedules, setSchedules] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [editingSchedule, setEditingSchedule] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [loadingRooms, setLoadingRooms] = useState(false);
+
+  async function loadData() {
+    setLoading(true);
+
+    try {
+      const movieData = await getMovieById(movieId);
+      const scheduleResponse = await getScheduleByMovieId(movieId);
+      setMovie(movieData);
+      setSchedules(scheduleResponse.data);
+    } catch (error) {
+      setIsError(true);
+      setMessage(`Failed to load schedules: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    let mounted = true
-    setLoading(true)
+    loadData();
+  }, [movieId]);
 
-    Promise.all([getMovieById(movieId), getScheduleByMovieId(movieId)])
-      .then(([movieData, scheduleResponse]) => {
-        if (!mounted) return
-        setMovie(movieData)
-        setSchedules(scheduleResponse.data)
-      })
-      .catch((error) => {
-        if (!mounted) return
-        setIsError(true)
-        setMessage(`Failed to load schedules: ${error.message}`)
-      })
-      .finally(() => {
-        if (mounted) setLoading(false)
-      })
-
-    return () => {
-      mounted = false
-    }
-  }, [movieId])
-
-  // Re-fetch the rooms that are free (active + no schedule conflict) whenever
-  // the modal is open and both date and start time are chosen.
   useEffect(() => {
     if (!showModal || !form.date || !form.startTime) {
-      setAvailableRooms([])
-      return
+      setAvailableRooms([]);
+      return;
     }
 
-    let mounted = true
-    setLoadingRooms(true)
-    setAvailableRooms([])
+    setLoadingRooms(true);
+    setAvailableRooms([]);
 
     getAvailableRooms(movieId, form.date, form.startTime, editingSchedule?.id)
       .then((response) => {
-        if (mounted) setAvailableRooms(response.data)
+        setAvailableRooms(response.data);
       })
       .catch(() => {
-        if (mounted) setAvailableRooms([])
+        setAvailableRooms([]);
       })
       .finally(() => {
-        if (mounted) setLoadingRooms(false)
-      })
-
-    return () => {
-      mounted = false
-    }
-  }, [showModal, movieId, form.date, form.startTime, editingSchedule])
+        setLoadingRooms(false);
+      });
+  }, [showModal, movieId, form.date, form.startTime, editingSchedule]);
 
   async function reloadSchedules() {
-    const response = await getScheduleByMovieId(movieId)
-    setSchedules(response.data)
+    const response = await getScheduleByMovieId(movieId);
+    setSchedules(response.data);
   }
 
   function openAddModal() {
-    setEditingSchedule(null)
-    setForm(emptyForm)
-    setFormError('')
-    setShowModal(true)
+    setEditingSchedule(null);
+    setForm(emptyForm);
+    setFormError("");
+    setShowModal(true);
   }
 
   function openEditModal(schedule) {
-    setEditingSchedule(schedule)
+    setEditingSchedule(schedule);
     setForm({
       date: toDatePart(schedule.startTime),
       startTime: toTimePart(schedule.startTime),
       roomId: schedule.roomId,
-    })
-    setFormError('')
-    setShowModal(true)
+    });
+    setFormError("");
+    setShowModal(true);
   }
 
   function closeModal() {
-    setShowModal(false)
-    setEditingSchedule(null)
-    setForm(emptyForm)
-    setFormError('')
+    setShowModal(false);
+    setEditingSchedule(null);
+    setForm(emptyForm);
+    setFormError("");
   }
 
   async function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
     const payload = {
       movieId: Number(movieId),
       roomId: Number(form.roomId),
       date: form.date,
       startTime: form.startTime,
-    }
+    };
 
     try {
       if (editingSchedule) {
-        await updateSchedule(editingSchedule.id, payload)
+        await updateSchedule(editingSchedule.id, payload);
       } else {
-        await createSchedule(payload)
+        await createSchedule(payload);
       }
-      setIsError(false)
-      setMessage(editingSchedule ? 'Schedule updated successfully.' : 'Schedule added successfully.')
-      closeModal()
-      await reloadSchedules()
+      setIsError(false);
+      setMessage(
+        editingSchedule
+          ? "Schedule updated successfully."
+          : "Schedule added successfully.",
+      );
+      closeModal();
+      await reloadSchedules();
     } catch (error) {
-      setFormError(error.response?.data || error.message)
+      setFormError(error.response?.data || error.message);
     }
   }
 
   async function handleDelete(schedule) {
-    if (!window.confirm('Delete this schedule? This cannot be undone.')) return
+    if (!window.confirm("Delete this schedule? This cannot be undone.")) return;
 
     try {
-      await deleteSchedule(schedule.id)
-      setIsError(false)
-      setMessage('Schedule deleted successfully.')
-      await reloadSchedules()
+      await deleteSchedule(schedule.id);
+      setIsError(false);
+      setMessage("Schedule deleted successfully.");
+      await reloadSchedules();
     } catch (error) {
-      setIsError(true)
-      setMessage(error.response?.data || error.message)
+      setIsError(true);
+      setMessage(error.response?.data || error.message);
     }
   }
 
-  const grouped = groupByDate(schedules)
+  const grouped = groupByDate(schedules);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <StaffSideBar />
 
-      <main style={{ flexGrow: 1, padding: 32, background: '#f9fafb', textAlign: 'left' }}>
+      <main
+        style={{
+          flexGrow: 1,
+          padding: 32,
+          background: "#f9fafb",
+          textAlign: "left",
+        }}
+      >
         {message && (
-          <Alert variant={isError ? 'danger' : 'success'} onClose={() => setMessage('')} dismissible>
+          <Alert
+            variant={isError ? "danger" : "success"}
+            onClose={() => setMessage("")}
+            dismissible
+          >
             {message}
           </Alert>
         )}
 
         {loading ? (
-          <div style={{ color: '#6b7280', padding: '40px 0', fontSize: 16 }}>
+          <div style={{ color: "#6b7280", padding: "40px 0", fontSize: 16 }}>
             Loading schedule...
           </div>
         ) : !movie ? (
-          <div style={{ color: '#ef4444', padding: '40px 0', fontSize: 16 }}>
+          <div style={{ color: "#ef4444", padding: "40px 0", fontSize: 16 }}>
             Movie not found.
           </div>
         ) : (
@@ -212,21 +229,27 @@ export default function MovieScheduleDetail() {
               <div style={s.movieMeta}>
                 <h2 style={s.movieTitle}>{movie.title}</h2>
                 <p style={s.metaRow}>
-                  <span style={s.metaLabel}>Duration:</span> {movie.duration} minutes
+                  <span style={s.metaLabel}>Duration:</span> {movie.duration}{" "}
+                  minutes
                 </p>
                 <p style={s.metaRow}>
-                  <span style={s.metaLabel}>Screening Period:</span>{' '}
-                  {formatDate(movie.screeningStart)} - {formatDate(movie.screeningEnd)}
+                  <span style={s.metaLabel}>Screening Period:</span>{" "}
+                  {formatDate(movie.screeningStart)} -{" "}
+                  {formatDate(movie.screeningEnd)}
                 </p>
               </div>
-              <button style={s.addBtn} onClick={openAddModal}>+ Add new schedule</button>
+              <button style={s.addBtn} onClick={openAddModal}>
+                + Add new schedule
+              </button>
             </div>
 
             <h5 style={s.sectionTitle}>Schedule</h5>
 
             <div style={s.scheduleList}>
               {grouped.length === 0 ? (
-                <div style={{ color: '#6b7280', padding: '24px 0' }}>No schedules available.</div>
+                <div style={{ color: "#6b7280", padding: "24px 0" }}>
+                  No schedules available.
+                </div>
               ) : (
                 grouped.map(([date, dateSchedules]) => (
                   <div key={date} style={s.dateGroup}>
@@ -234,20 +257,41 @@ export default function MovieScheduleDetail() {
                     <div style={s.showtimeList}>
                       {dateSchedules.map((st) => (
                         <div key={st.id} style={s.showtimeRow}>
-                          <span style={s.timeRange}>{toTimePart(st.startTime)} - {toTimePart(st.endTime)}</span>
+                          <span style={s.timeRange}>
+                            {toTimePart(st.startTime)} -{" "}
+                            {toTimePart(st.endTime)}
+                          </span>
                           <div style={s.showtimeCard}>
-                            <span style={s.showtimeTime}>{toTimePart(st.startTime)} - {toTimePart(st.endTime)}</span>
-                            <span style={s.showtimeInfo}>Room: {st.roomName}</span>
-                            <span style={{ ...s.showtimeInfo, ...s.statusBadge[st.status] }}>
+                            <span style={s.showtimeTime}>
+                              {toTimePart(st.startTime)} -{" "}
+                              {toTimePart(st.endTime)}
+                            </span>
+                            <span style={s.showtimeInfo}>
+                              Room: {st.roomName}
+                            </span>
+                            <span
+                              style={{
+                                ...s.showtimeInfo,
+                                ...s.statusBadge[st.status],
+                              }}
+                            >
                               {statusLabels[st.status] ?? st.status}
                             </span>
                           </div>
-                          {st.status === 'UPCOMING' && (
+                          {st.status === "UPCOMING" && (
                             <>
-                              <Button size="sm" variant="outline-secondary" onClick={() => openEditModal(st)}>
+                              <Button
+                                size="sm"
+                                variant="outline-secondary"
+                                onClick={() => openEditModal(st)}
+                              >
                                 Edit
                               </Button>
-                              <Button size="sm" variant="outline-danger" onClick={() => handleDelete(st)}>
+                              <Button
+                                size="sm"
+                                variant="outline-danger"
+                                onClick={() => handleDelete(st)}
+                              >
                                 Delete
                               </Button>
                             </>
@@ -265,25 +309,38 @@ export default function MovieScheduleDetail() {
 
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{editingSchedule ? 'Update schedule' : 'Add new schedule'}</Modal.Title>
+          <Modal.Title>
+            {editingSchedule ? "Update schedule" : "Add new schedule"}
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {movie && (
               <div style={s.modalMovieInfo}>
-                <img src={movie.poster} alt={movie.title} style={s.modalPoster} />
+                <img
+                  src={movie.poster}
+                  alt={movie.title}
+                  style={s.modalPoster}
+                />
                 <div>
                   <p style={s.modalMovieTitle}>{movie.title}</p>
-                  <p style={s.modalMovieMeta}>Duration: {movie.duration} minutes</p>
                   <p style={s.modalMovieMeta}>
-                    Screening Period: {formatDate(movie.screeningStart)} - {formatDate(movie.screeningEnd)}
+                    Duration: {movie.duration} minutes
+                  </p>
+                  <p style={s.modalMovieMeta}>
+                    Screening Period: {formatDate(movie.screeningStart)} -{" "}
+                    {formatDate(movie.screeningEnd)}
                   </p>
                 </div>
               </div>
             )}
 
             {formError && (
-              <Alert variant="danger" onClose={() => setFormError('')} dismissible>
+              <Alert
+                variant="danger"
+                onClose={() => setFormError("")}
+                dismissible
+              >
                 {formError}
               </Alert>
             )}
@@ -296,7 +353,9 @@ export default function MovieScheduleDetail() {
                 min={movie?.screeningStart}
                 max={movie?.screeningEnd}
                 value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value, roomId: '' })}
+                onChange={(e) =>
+                  setForm({ ...form, date: e.target.value, roomId: "" })
+                }
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -305,7 +364,9 @@ export default function MovieScheduleDetail() {
                 type="time"
                 required
                 value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value, roomId: '' })}
+                onChange={(e) =>
+                  setForm({ ...form, startTime: e.target.value, roomId: "" })
+                }
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -318,12 +379,12 @@ export default function MovieScheduleDetail() {
               >
                 <option value="">
                   {!form.date || !form.startTime
-                    ? 'Select a date and start time first...'
+                    ? "Select a date and start time first..."
                     : loadingRooms
-                    ? 'Loading available rooms...'
-                    : availableRooms.length === 0
-                    ? 'No rooms available at this time'
-                    : 'Select a room...'}
+                      ? "Loading available rooms..."
+                      : availableRooms.length === 0
+                        ? "No rooms available at this time"
+                        : "Select a room..."}
                 </option>
                 {availableRooms.map((room) => (
                   <option key={room.id} value={room.id}>
@@ -344,64 +405,64 @@ export default function MovieScheduleDetail() {
         </Form>
       </Modal>
     </div>
-  )
+  );
 }
 
 const s = {
   movieInfoBox: {
-    display: 'flex',
-    alignItems: 'flex-start',
+    display: "flex",
+    alignItems: "flex-start",
     gap: 20,
-    background: '#fff',
-    border: '1px solid #e5e7eb',
+    background: "#fff",
+    border: "1px solid #e5e7eb",
     borderRadius: 10,
     padding: 20,
     marginBottom: 28,
-    position: 'relative',
+    position: "relative",
   },
   poster: {
     width: 110,
     height: 155,
-    objectFit: 'cover',
+    objectFit: "cover",
     borderRadius: 6,
-    border: '1px solid #e5e7eb',
+    border: "1px solid #e5e7eb",
     flexShrink: 0,
   },
   movieMeta: { flex: 1 },
   movieTitle: {
     fontSize: 18,
     fontWeight: 600,
-    color: '#111827',
-    margin: '0 0 10px',
+    color: "#111827",
+    margin: "0 0 10px",
   },
   metaRow: {
     fontSize: 14,
-    color: '#374151',
-    margin: '4px 0',
+    color: "#374151",
+    margin: "4px 0",
   },
   metaLabel: {
     fontWeight: 500,
-    color: '#6b7280',
+    color: "#6b7280",
     marginRight: 6,
   },
   addBtn: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20,
-    background: 'transparent',
-    border: 'none',
-    color: '#6d28d9',
+    background: "transparent",
+    border: "none",
+    color: "#6d28d9",
     fontSize: 13,
     fontWeight: 500,
-    cursor: 'pointer',
-    textDecoration: 'underline',
+    cursor: "pointer",
+    textDecoration: "underline",
     padding: 0,
   },
   modalMovieInfo: {
-    display: 'flex',
+    display: "flex",
     gap: 12,
-    background: '#f9fafb',
-    border: '1px solid #e5e7eb',
+    background: "#f9fafb",
+    border: "1px solid #e5e7eb",
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
@@ -409,83 +470,83 @@ const s = {
   modalPoster: {
     width: 56,
     height: 80,
-    objectFit: 'cover',
+    objectFit: "cover",
     borderRadius: 4,
     flexShrink: 0,
   },
   modalMovieTitle: {
     fontSize: 14,
     fontWeight: 600,
-    color: '#111827',
-    margin: '0 0 4px',
+    color: "#111827",
+    margin: "0 0 4px",
   },
   modalMovieMeta: {
     fontSize: 12,
-    color: '#6b7280',
-    margin: '2px 0',
+    color: "#6b7280",
+    margin: "2px 0",
   },
   sectionTitle: {
     fontSize: 15,
     fontWeight: 600,
-    color: '#111827',
+    color: "#111827",
     marginBottom: 16,
   },
   scheduleList: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 24,
   },
   dateGroup: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 8,
   },
   dateLabel: {
     fontSize: 13,
     fontWeight: 600,
-    color: '#6d28d9',
-    margin: '0 0 4px',
+    color: "#6d28d9",
+    margin: "0 0 4px",
     paddingBottom: 6,
-    borderBottom: '1px solid #e5e7eb',
+    borderBottom: "1px solid #e5e7eb",
   },
   showtimeList: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 8,
   },
   showtimeRow: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     gap: 14,
   },
   timeRange: {
     fontSize: 13,
-    color: '#6b7280',
+    color: "#6b7280",
     minWidth: 110,
     fontWeight: 500,
   },
   showtimeCard: {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
+    background: "#fff",
+    border: "1px solid #e5e7eb",
     borderRadius: 6,
-    padding: '8px 14px',
-    display: 'flex',
-    flexDirection: 'column',
+    padding: "8px 14px",
+    display: "flex",
+    flexDirection: "column",
     gap: 2,
     minWidth: 220,
   },
   showtimeTime: {
     fontWeight: 600,
-    color: '#111827',
+    color: "#111827",
     fontSize: 13,
   },
   showtimeInfo: {
-    color: '#6b7280',
+    color: "#6b7280",
     fontSize: 12,
   },
   statusBadge: {
-    UPCOMING: { color: '#6d28d9', fontWeight: 600 },
-    SHOWING: { color: '#059669', fontWeight: 600 },
-    ENDED: { color: '#9ca3af', fontWeight: 600 },
+    UPCOMING: { color: "#6d28d9", fontWeight: 600 },
+    SHOWING: { color: "#059669", fontWeight: 600 },
+    ENDED: { color: "#9ca3af", fontWeight: 600 },
   },
-}
+};

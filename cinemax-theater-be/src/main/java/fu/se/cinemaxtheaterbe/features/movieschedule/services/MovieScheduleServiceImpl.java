@@ -5,6 +5,7 @@ import fu.se.cinemaxtheaterbe.entity.enums.MovieScheduleStatus;
 import fu.se.cinemaxtheaterbe.entity.enums.RoomStatus;
 import fu.se.cinemaxtheaterbe.entity.theater.Room;
 import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.features.booking.repositories.BookingRepository;
 import fu.se.cinemaxtheaterbe.features.movie.repositories.MovieRepository;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleRequest;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleResponse;
@@ -32,6 +33,7 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
     private final MovieScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
+    private final BookingRepository bookingRepository;
     private final RoomMapper roomMapper;
     private final ScheduleMapper scheduleMapper;
 
@@ -84,6 +86,11 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
         refreshStatus(schedule);
         validateUpcoming(schedule);
 
+        if (bookingRepository.existsBySchedule_Id(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Suất chiếu đã được đặt vé, không thể chỉnh sửa.");
+        }
+
         Movie movie = findMovieOrThrow(request.getMovieId());
         Room room = findRoomOrThrow(request.getRoomId());
 
@@ -109,6 +116,12 @@ public class MovieScheduleServiceImpl implements MovieScheduleService {
         Schedule schedule = findScheduleOrThrow(id);
         refreshStatus(schedule);
         validateUpcoming(schedule);
+
+        if (bookingRepository.existsBySchedule_Id(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Suất chiếu đã được đặt vé, không thể xóa.");
+        }
+
         scheduleRepository.delete(schedule);
     }
 

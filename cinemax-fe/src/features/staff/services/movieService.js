@@ -1,9 +1,6 @@
 import axiosClient from '@/shared/services/axiosClient'
 
-// Movie catalog: real API (fu.se.cinemaxtheaterbe, /api/v1/movies).
-// Unlike the Schedule functions below, these unwrap `.data` and remap field
-// names here, because MovieCard/MovieGrid/MovieScheduleDetail already expect
-// the old mock shape (poster, duration, screeningStart, screeningEnd).
+
 function toMovieViewModel(movie) {
   return {
     id: movie.id,
@@ -13,6 +10,7 @@ function toMovieViewModel(movie) {
     screeningStart: movie.releaseDate,
     screeningEnd: movie.endDate,
     status: movie.status,
+    hasSchedules: movie.hasSchedules,
   }
 }
 
@@ -33,7 +31,7 @@ export async function getMovieRaw(movieId) {
 
 
 export function getScheduleByMovieId(movieId) {
-  return axiosClient.get('/api/v1/schedules', { params: { movieId } })
+ return axiosClient.get('/api/v1/schedules', { params: { movieId } })
 }
 
 export function getScheduleById(scheduleId) {

@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface MovieMapper {
 
+    @Mapping(target = "hasSchedules", expression = "java(!movie.getSchedules().isEmpty())")
     MovieResponse toResponse(Movie movie);
 
     @Mapping(target = "genres", ignore = true)

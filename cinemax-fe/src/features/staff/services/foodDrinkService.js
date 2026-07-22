@@ -1,7 +1,6 @@
 import axiosClient from '@/shared/services/axiosClient'
 
-// Backend binds these with @ModelAttribute, which reads multipart/form-data
-// (not JSON) — so the payload must go out as FormData.
+
 function toFormData(payload) {
   const formData = new FormData()
   Object.entries(payload).forEach(([key, value]) => {

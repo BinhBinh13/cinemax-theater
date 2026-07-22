@@ -2,6 +2,7 @@ package fu.se.cinemaxtheaterbe.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -17,6 +18,12 @@ public class GlobalException {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatus(ResponseStatusException exception) {
         return new ResponseEntity<>(exception.getReason(), HttpStatus.valueOf(exception.getStatusCode().value()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException exception) {
+        log.warn("Data integrity violation", exception);
+        return new ResponseEntity<>("Cannot delete: this record is still referenced by other data.", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BindException.class)

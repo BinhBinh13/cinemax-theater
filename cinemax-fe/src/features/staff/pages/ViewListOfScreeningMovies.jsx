@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -15,23 +16,18 @@ export default function ViewListOfScreeningMovies() {
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    let mounted = true;
     setLoading(true);
 
     getMovies()
       .then((data) => {
-        if (mounted) setMovies(data);
+        setMovies(data);
       })
       .catch((err) => {
-        if (mounted) setError(`Failed to load movies: ${err.message}`);
+        setError(`Failed to load movies: ${err.message}`);
       })
       .finally(() => {
-        if (mounted) setLoading(false);
+        setLoading(false);
       });
-
-    return () => {
-      mounted = false;
-    };
   }, []);
 
   const filteredMovies = movies.filter((movie) =>
@@ -58,7 +54,10 @@ export default function ViewListOfScreeningMovies() {
       <main className="flex-grow-1 p-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h4 className="fw-normal mb-0">Movie list</h4>
-          <button className="btn btn-danger btn-sm" onClick={() => navigate('/staff/movies/new')}>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={() => navigate("/staff/movies/new")}
+          >
             + Add Movie
           </button>
         </div>

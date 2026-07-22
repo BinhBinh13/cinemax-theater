@@ -36,7 +36,6 @@ public class BookingController {
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = servletRequest.getRemoteAddr();
         }
-        // Normalize IPv6 localhost loopback for VNPAY compatibility if needed
         if ("0:0:0:0:0:0:0:1".equals(ipAddress)) {
             ipAddress = "127.0.0.1";
         }

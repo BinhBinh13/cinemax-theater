@@ -19,8 +19,6 @@ import {
   deleteFoodDrink,
 } from "../services/foodDrinkService";
 
-// imageURL is stored as a relative path (e.g. "/uploads/xxx.png"); resolve it
-// against the backend origin for <img> tags, which don't go through axios.
 function resolveImageUrl(url) {
   if (!url) return "";
   return url.startsWith("http") ? url : `${BASE_URL}${url}`;
@@ -28,119 +26,119 @@ function resolveImageUrl(url) {
 
 const S = {
   page: {
-    background: '#f5f5f9',
-    minHeight: '100vh',
-    color: '#1f2937',
+    background: "#f5f5f9",
+    minHeight: "100vh",
+    color: "#1f2937",
   },
   header: {
     fontSize: 26,
     fontWeight: 700,
-    color: '#111827',
+    color: "#111827",
     letterSpacing: 0.5,
   },
-  headerAccent: { color: '#e50914' },
+  headerAccent: { color: "#e50914" },
   searchInput: {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    color: '#1f2937',
+    background: "#fff",
+    border: "1px solid #e5e7eb",
+    color: "#1f2937",
     borderRadius: 10,
-    padding: '10px 16px',
+    padding: "10px 16px",
     maxWidth: 300,
-    outline: 'none',
+    outline: "none",
     fontSize: 14,
-    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
   },
   addBtn: {
-    background: 'linear-gradient(135deg, #e50914, #b80710)',
-    border: 'none',
+    background: "linear-gradient(135deg, #e50914, #b80710)",
+    border: "none",
     borderRadius: 10,
-    padding: '10px 22px',
+    padding: "10px 22px",
     fontWeight: 600,
     fontSize: 14,
-    color: '#fff',
-    boxShadow: '0 2px 8px rgba(229,9,20,0.3)',
+    color: "#fff",
+    boxShadow: "0 2px 8px rgba(229,9,20,0.3)",
   },
   grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
     gap: 20,
   },
   card: {
-    background: '#fff',
+    background: "#fff",
     borderRadius: 14,
-    border: '1px solid #e5e7eb',
-    padding: '18px',
-    transition: 'all 0.25s ease',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    border: "1px solid #e5e7eb",
+    padding: "18px",
+    transition: "all 0.25s ease",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
   },
   thumb: {
-    width: '100%',
+    width: "100%",
     height: 140,
-    objectFit: 'cover',
+    objectFit: "cover",
     borderRadius: 10,
     marginBottom: 14,
-    background: '#f3f4f6',
+    background: "#f3f4f6",
   },
   thumbPlaceholder: {
-    width: '100%',
+    width: "100%",
     height: 140,
     borderRadius: 10,
     marginBottom: 14,
-    background: '#f3f4f6',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#9ca3af',
+    background: "#f3f4f6",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#9ca3af",
     fontSize: 13,
   },
   itemHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 8,
     gap: 8,
   },
   itemName: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#111827',
+    color: "#111827",
   },
   metaRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: "flex",
+    justifyContent: "space-between",
     fontSize: 13,
-    color: '#6b7280',
+    color: "#6b7280",
     marginBottom: 4,
   },
   price: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#e50914',
+    color: "#e50914",
     marginTop: 8,
     marginBottom: 14,
   },
   cardActions: {
-    display: 'flex',
+    display: "flex",
     gap: 8,
     paddingTop: 14,
-    borderTop: '1px solid #e5e7eb',
+    borderTop: "1px solid #e5e7eb",
   },
   actionBtn: {
-    border: 'none',
+    border: "none",
     borderRadius: 8,
-    padding: '7px 16px',
+    padding: "7px 16px",
     fontSize: 12,
     fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.15s',
+    cursor: "pointer",
+    transition: "all 0.15s",
   },
   emptyState: {
-    gridColumn: '1 / -1',
-    textAlign: 'center',
-    padding: '60px 0',
-    color: '#9ca3af',
+    gridColumn: "1 / -1",
+    textAlign: "center",
+    padding: "60px 0",
+    color: "#9ca3af",
   },
-}
+};
 
 const emptyForm = {
   itemName: "",
@@ -354,13 +352,13 @@ export default function FoodDrinkListPage() {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <span style={{ color: '#9ca3af', fontSize: 13 }}>
-            {visibleItems.length} item{visibleItems.length !== 1 && 's'}
+          <span style={{ color: "#9ca3af", fontSize: 13 }}>
+            {visibleItems.length} item{visibleItems.length !== 1 && "s"}
           </span>
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af' }}>
+          <div style={{ textAlign: "center", padding: 60, color: "#9ca3af" }}>
             Loading items...
           </div>
         ) : (
@@ -368,11 +366,20 @@ export default function FoodDrinkListPage() {
             {visibleItems.length === 0 ? (
               <div style={S.emptyState}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>🍿</div>
-                <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4, color: '#6b7280' }}>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 600,
+                    marginBottom: 4,
+                    color: "#6b7280",
+                  }}
+                >
                   No items found
                 </div>
                 <div style={{ fontSize: 13 }}>
-                  {q ? 'Try a different search term.' : 'Click "+ Add new item" to get started.'}
+                  {q
+                    ? "Try a different search term."
+                    : 'Click "+ Add new item" to get started.'}
                 </div>
               </div>
             ) : (
@@ -391,8 +398,13 @@ export default function FoodDrinkListPage() {
                   <div style={S.itemHeader}>
                     <div style={S.itemName}>{item.itemName}</div>
                     <Badge
-                      bg={item.status === 'ACTIVE' ? 'success' : 'secondary'}
-                      style={{ borderRadius: 6, fontSize: 11, padding: '4px 10px', flexShrink: 0 }}
+                      bg={item.status === "ACTIVE" ? "success" : "secondary"}
+                      style={{
+                        borderRadius: 6,
+                        fontSize: 11,
+                        padding: "4px 10px",
+                        flexShrink: 0,
+                      }}
                     >
                       {item.status}
                     </Badge>
@@ -404,18 +416,26 @@ export default function FoodDrinkListPage() {
                   </div>
 
                   <div style={S.price}>
-                    {Number(item.price).toLocaleString('vi-VN')} đ
+                    {Number(item.price).toLocaleString("vi-VN")} đ
                   </div>
 
                   <div style={S.cardActions}>
                     <button
-                      style={{ ...S.actionBtn, background: '#f3f4f6', color: '#374151' }}
+                      style={{
+                        ...S.actionBtn,
+                        background: "#f3f4f6",
+                        color: "#374151",
+                      }}
                       onClick={() => openEditModal(item)}
                     >
                       Edit
                     </button>
                     <button
-                      style={{ ...S.actionBtn, background: '#fef2f2', color: '#ef4444' }}
+                      style={{
+                        ...S.actionBtn,
+                        background: "#fef2f2",
+                        color: "#ef4444",
+                      }}
                       onClick={() => handleDelete(item)}
                     >
                       Delete
@@ -429,8 +449,10 @@ export default function FoodDrinkListPage() {
       </div>
 
       <Modal show={showModal} onHide={closeModal} size="lg">
-        <Modal.Header closeButton style={{ borderBottom: '1px solid #e5e7eb' }}>
-          <Modal.Title style={{ color: '#111827', fontSize: 18, fontWeight: 700 }}>
+        <Modal.Header closeButton style={{ borderBottom: "1px solid #e5e7eb" }}>
+          <Modal.Title
+            style={{ color: "#111827", fontSize: 18, fontWeight: 700 }}
+          >
             {editingItem ? "✏️ Update item" : "➕ Add new item"}
           </Modal.Title>
         </Modal.Header>
@@ -608,11 +630,11 @@ export default function FoodDrinkListPage() {
               </Col>
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer style={{ borderTop: '1px solid #e5e7eb' }}>
+          <Modal.Footer style={{ borderTop: "1px solid #e5e7eb" }}>
             <Button
               variant="secondary"
               onClick={closeModal}
-              style={{ borderRadius: 8, padding: '8px 20px' }}
+              style={{ borderRadius: 8, padding: "8px 20px" }}
             >
               Cancel
             </Button>
@@ -621,7 +643,7 @@ export default function FoodDrinkListPage() {
                 variant="outline-danger"
                 type="button"
                 onClick={handleSaveDraft}
-                style={{ borderRadius: 8, padding: '8px 20px' }}
+                style={{ borderRadius: 8, padding: "8px 20px" }}
               >
                 Save Draft
               </Button>
@@ -630,10 +652,10 @@ export default function FoodDrinkListPage() {
               type="submit"
               disabled={uploading}
               style={{
-                background: 'linear-gradient(135deg, #e50914, #b80710)',
-                border: 'none',
+                background: "linear-gradient(135deg, #e50914, #b80710)",
+                border: "none",
                 borderRadius: 8,
-                padding: '8px 24px',
+                padding: "8px 24px",
                 fontWeight: 600,
               }}
             >

@@ -33,4 +33,5 @@ public class MovieResponse {
     private String trailerUrl;
     private MovieStatus status;
     private List<Genre> genres;
+    private boolean hasSchedules;
 }
