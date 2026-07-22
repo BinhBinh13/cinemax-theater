@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/app/providers/AuthContext'
+import { useLanguage } from '@/app/providers/LanguageProvider'
+import CustomerHeader from '@/shared/components/CustomerHeader'
+import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
@@ -19,6 +22,7 @@ const RegisterPage = () => {
   const [localLoading, setLocalLoading] = useState(false)
 
   const { register, error: authError } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -26,7 +30,6 @@ const RegisterPage = () => {
     setValidationError('')
     setSuccessMessage('')
 
-    // Client-side validations
     if (!username.trim() || !email.trim() || !password || !confirmPassword) {
       setValidationError('Vui lòng điền đầy đủ các thông tin bắt buộc.')
       return
@@ -47,9 +50,8 @@ const RegisterPage = () => {
     setLocalLoading(true)
     try {
       await register(username, email, password, fullName, phone)
-      setSuccessMessage('Đăng ký tài khoản thành công! Đang chuyển hướng đến trang đăng nhập...')
+      setSuccessMessage('Đăng ký tài khoản thành công! Đang chuyển hướng...')
       
-      // Clear inputs
       setUsername('')
       setEmail('')
       setPassword('')
@@ -57,7 +59,6 @@ const RegisterPage = () => {
       setFullName('')
       setPhone('')
 
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         navigate('/login')
       }, 2000)
@@ -69,147 +70,163 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="cinema-bg d-flex justify-content-center align-items-center p-3 py-5">
-      <div className="glass-card p-4 p-md-5 w-100" style={{ maxWidth: '500px' }}>
-        
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="cinema-logo text-danger m-0 mb-2" style={{ fontSize: '32px' }}>
-            CINE<span className="text-gold">MAX</span>
-          </h1>
-          <p className="text-secondary small">Hệ Thống Quản Lý Rạp Chiếu Phim Cao Cấp</p>
-        </div>
+    <div className="cinemax-page-container d-flex flex-column">
+      <CustomerHeader />
 
-        <h3 className="text-center mb-4 fw-normal">Đăng Ký Tài Khoản</h3>
+      <main className="flex-grow-1 py-5 d-flex align-items-center justify-content-center">
+        <Container style={{ maxWidth: '550px' }}>
+          
+          <div className="cinemax-auth-wrapper shadow">
+            {/* Header Tabs */}
+            <div className="cinemax-auth-header">
+              <div className="d-flex justify-content-center gap-4">
+                <Link to="/login" className="text-white-50 fw-bold fs-5 text-decoration-none hover-white">
+                  {t('loginBtn')}
+                </Link>
+                <Link to="/register" className="text-white fw-bold fs-5 text-decoration-none border-bottom border-white border-2 pb-1">
+                  {t('registerBtn')}
+                </Link>
+              </div>
+            </div>
 
-        {/* Message Alerts */}
-        {validationError && (
-          <Alert variant="danger" className="py-2 small border-0 bg-danger bg-opacity-25 text-danger">
-            {validationError}
-          </Alert>
-        )}
-        {authError && !validationError && (
-          <Alert variant="danger" className="py-2 small border-0 bg-danger bg-opacity-25 text-danger">
-            {authError}
-          </Alert>
-        )}
-        {successMessage && (
-          <Alert variant="success" className="py-2 small border-0 bg-success bg-opacity-25 text-success">
-            {successMessage}
-          </Alert>
-        )}
+            <div className="p-4 p-md-5">
+              <div className="text-center mb-4">
+                <h3 className="fw-black text-dark m-0">{t('createAccountTitle')}</h3>
+                <p className="small text-secondary">{t('createAccountDesc')}</p>
+              </div>
 
-        <Form onSubmit={handleSubmit}>
-          {/* Username */}
-          <Form.Group className="mb-3" controlId="formUsername">
-            <Form.Label className="small text-secondary">Tên đăng nhập <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Nhập tên đăng nhập"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-              required
-            />
-          </Form.Group>
+              {/* Message Alerts */}
+              {validationError && (
+                <Alert variant="danger" className="py-2 small border-0 bg-danger bg-opacity-10 text-danger fw-semibold">
+                  {validationError}
+                </Alert>
+              )}
+              {authError && !validationError && (
+                <Alert variant="danger" className="py-2 small border-0 bg-danger bg-opacity-10 text-danger fw-semibold">
+                  {authError}
+                </Alert>
+              )}
+              {successMessage && (
+                <Alert variant="success" className="py-2 small border-0 bg-success bg-opacity-10 text-success fw-semibold">
+                  {successMessage}
+                </Alert>
+              )}
 
-          {/* Email */}
-          <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label className="small text-secondary">Địa chỉ Email <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Nhập địa chỉ email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-              required
-            />
-          </Form.Group>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formUsername">
+                  <Form.Label className="small fw-bold text-dark">{t('usernameOrEmail')}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                    required
+                  />
+                </Form.Group>
 
-          {/* Password */}
-          <Form.Group className="mb-3" controlId="formPassword">
-            <Form.Label className="small text-secondary">Mật khẩu <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-              required
-            />
-          </Form.Group>
+                <Form.Group className="mb-3" controlId="formEmail">
+                  <Form.Label className="small fw-bold text-dark">Email *</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                    required
+                  />
+                </Form.Group>
 
-          {/* Confirm Password */}
-          <Form.Group className="mb-3" controlId="formConfirmPassword">
-            <Form.Label className="small text-secondary">Nhập lại mật khẩu <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Nhập lại mật khẩu để xác nhận"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-              required
-            />
-          </Form.Group>
+                <Form.Group className="mb-3" controlId="formPassword">
+                  <Form.Label className="small fw-bold text-dark">{t('password')}</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Minimum 6 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                    required
+                  />
+                </Form.Group>
 
-          <hr className="my-4 border-secondary opacity-25" />
+                <Form.Group className="mb-3" controlId="formConfirmPassword">
+                  <Form.Label className="small fw-bold text-dark">{t('confirmPassword')}</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                    required
+                  />
+                </Form.Group>
 
-          {/* Full Name */}
-          <Form.Group className="mb-3" controlId="formFullName">
-            <Form.Label className="small text-secondary">Họ và tên</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Nhập họ và tên đầy đủ"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-            />
-          </Form.Group>
+                <hr className="my-3" />
 
-          {/* Phone */}
-          <Form.Group className="mb-4" controlId="formPhone">
-            <Form.Label className="small text-secondary">Số điện thoại</Form.Label>
-            <Form.Control
-              type="tel"
-              placeholder="Nhập số điện thoại"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="cinema-input py-2"
-              disabled={localLoading || !!successMessage}
-            />
-          </Form.Group>
+                <Form.Group className="mb-3" controlId="formFullName">
+                  <Form.Label className="small fw-bold text-dark">{t('fullName')}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                  />
+                </Form.Group>
 
-          <Button
-            variant="danger"
-            type="submit"
-            className="neon-btn w-100 py-2.5 mb-3"
-            disabled={localLoading || !!successMessage}
-          >
-            {localLoading ? (
-              <>
-                <Spinner animation="border" size="sm" className="me-2" />
-                Đang đăng ký...
-              </>
-            ) : (
-              'Đăng Ký'
-            )}
-          </Button>
-        </Form>
+                <Form.Group className="mb-4" controlId="formPhone">
+                  <Form.Label className="small fw-bold text-dark">{t('phone')}</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="py-2 border-dark"
+                    disabled={localLoading || !!successMessage}
+                  />
+                </Form.Group>
 
-        {/* Footer */}
-        <div className="text-center mt-4 small text-secondary">
-          Đã có tài khoản?{' '}
-          <Link to="/login" className="text-gold text-decoration-none hover-underline fw-bold">
-            Đăng nhập ngay
-          </Link>
-        </div>
+                <Button
+                  type="submit"
+                  className="w-100 py-2.5 mb-3 fw-bold uppercase shadow-sm"
+                  style={{ background: '#e50914', borderColor: '#b80710' }}
+                  disabled={localLoading || !!successMessage}
+                >
+                  {localLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" />
+                      Registering...
+                    </>
+                  ) : (
+                    t('registerBtn')
+                  )}
+                </Button>
+              </Form>
 
-      </div>
+              <div className="text-center mt-3 small text-secondary">
+                {t('alreadyHaveAccount')}{' '}
+                <Link to="/login" className="text-danger fw-bold text-decoration-none">
+                  {t('loginNow')}
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </Container>
+      </main>
+
+      {/* CINEMAX Footer */}
+      <footer className="cinemax-footer">
+        <Container className="text-center">
+          <div className="fw-bold mb-1">{t('companyName')}</div>
+          <div className="small text-secondary">{t('hotline')}: 1900 1234 | {t('supportEmail')}</div>
+        </Container>
+      </footer>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.auth.services;
 
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.features.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

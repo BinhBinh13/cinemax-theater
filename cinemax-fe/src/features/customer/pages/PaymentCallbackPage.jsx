@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { verifyPayment } from "../services/BookingService";
+import { verifyPayment } from "../services/PaymentService";
+import CustomerHeader from "@/shared/components/CustomerHeader";
 
 function formatVnPayDate(dateStr) {
   if (!dateStr || dateStr.length < 14) return dateStr;
@@ -53,7 +54,9 @@ export default function PaymentCallbackPage() {
   }, [searchParams]);
 
   return (
-    <div className="pb-5">
+    <div className="cinemax-page-container d-flex flex-column min-vh-100">
+      <CustomerHeader />
+      <div className="pb-5">
 
       <div className="container-xl my-5 flex-grow-1 d-flex align-items-center justify-content-center">
         {loading ? (
@@ -170,6 +173,7 @@ export default function PaymentCallbackPage() {
         )}
       </div>
 
+      </div>
     </div>
   );
 }

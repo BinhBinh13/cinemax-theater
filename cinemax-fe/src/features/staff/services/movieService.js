@@ -6,11 +6,18 @@ function toMovieViewModel(movie) {
     id: movie.id,
     title: movie.title,
     poster: movie.posterUrl,
+    banner: movie.bannerUrl,
+    trailerUrl: movie.trailerUrl,
     duration: movie.durationMinutes,
+    description: movie.description,
     screeningStart: movie.releaseDate,
     screeningEnd: movie.endDate,
     status: movie.status,
-    hasSchedules: movie.hasSchedules,
+    language: movie.language,
+    director: movie.director,
+    cast: movie.cast,
+    rating: movie.rating,
+    genres: movie.genres ?? [],
   }
 }
 

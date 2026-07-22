@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.genre.controllers;
 
-import fu.se.cinemaxtheaterbe.entity.Genre;
+import fu.se.cinemaxtheaterbe.entity.movie.Genre;
 import fu.se.cinemaxtheaterbe.features.genre.repositories.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

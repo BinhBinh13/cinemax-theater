@@ -67,6 +67,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         // Restrict sensitive endpoints to STAFF or ADMIN roles
                         .requestMatchers("/api/v1/staff/**").hasAnyRole("STAFF", "ADMIN")
+                        // Self-service profile endpoint: any authenticated user manages their own account
+                        .requestMatchers("/api/v1/users/profile").authenticated()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/movies/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/movies/**").hasAnyRole("STAFF", "ADMIN")

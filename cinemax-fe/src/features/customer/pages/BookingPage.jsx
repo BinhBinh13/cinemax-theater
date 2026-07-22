@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getScheduleById, getScheduleSeats, getFoodDrinks, createBooking } from "../services/BookingService";
+import CustomerHeader from "@/shared/components/CustomerHeader";
+import SeatGrid from "@/shared/components/SeatGrid";
+import { SEAT_COLORS } from "@/shared/utils/seatLayout";
 
 export default function BookingPage() {
   const { scheduleId } = useParams();
@@ -153,33 +156,41 @@ export default function BookingPage() {
 
   if (loading) {
     return (
-      <div className="container text-center py-5 my-5">
-        <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
-          <span className="visually-hidden">Loading...</span>
+      <div className="cinemax-page-container d-flex flex-column min-vh-100">
+        <CustomerHeader />
+        <div className="container text-center py-5 my-5">
+          <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3 text-muted fs-5">Loading seat layout and snack menu...</p>
         </div>
-        <p className="mt-3 text-muted fs-5">Loading seat layout and snack menu...</p>
       </div>
     );
   }
 
   if (error && !schedule) {
     return (
-      <div className="container text-center py-5 my-5">
-        <div className="alert alert-danger d-inline-block px-5" role="alert">
-          <h4 className="alert-heading"><i className="fa fa-exclamation-triangle me-2"></i>Error</h4>
-          <p className="mb-0">{error}</p>
-        </div>
-        <div className="mt-4">
-          <Link className="btn btn-dark px-4 py-2" to="/">
-            Back to Movies
-          </Link>
+      <div className="cinemax-page-container d-flex flex-column min-vh-100">
+        <CustomerHeader />
+        <div className="container text-center py-5 my-5">
+          <div className="alert alert-danger d-inline-block px-5" role="alert">
+            <h4 className="alert-heading"><i className="fa fa-exclamation-triangle me-2"></i>Error</h4>
+            <p className="mb-0">{error}</p>
+          </div>
+          <div className="mt-4">
+            <Link className="btn btn-dark px-4 py-2" to="/">
+              Back to Movies
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="pb-5">
+    <div className="cinemax-page-container d-flex flex-column min-vh-100">
+      <CustomerHeader />
+      <div className="pb-5">
 
       {/* Breadcrumb Steps */}
       <section className="bg-light py-3 border-bottom">
@@ -217,87 +228,58 @@ export default function BookingPage() {
                   </h5>
 
                   {/* Screen visualization */}
-                  <div className="text-center mb-5">
-                    <div
-                      className="mx-auto text-white fw-bold py-2 rounded-bottom-pill shadow-sm"
-                      style={{
-                        maxWidth: "450px",
-                        backgroundColor: "#343a40",
-                        fontSize: "13px",
-                        letterSpacing: "4px",
-                      }}
-                    >
+                  <div style={{ position: "relative", margin: "10px auto 30px", textAlign: "center" }}>
+                    <div style={{
+                      width: "90%", maxWidth: 500, height: 40,
+                      margin: "0 auto",
+                      borderTop: "4px solid #999",
+                      borderRadius: "50% / 100px 100px 0 0",
+                    }} />
+                    <div style={{
+                      position: "absolute", top: 4, left: "50%", transform: "translateX(-50%)",
+                      letterSpacing: 8, fontSize: 16, fontWeight: 700, color: "#999",
+                    }}>
                       SCREEN
                     </div>
                   </div>
 
                   {/* Seat grid */}
-                  <div className="text-center overflow-auto mb-4 py-2 border rounded bg-light p-3">
-                    {sortedRowKeys.map((row) => (
-                      <div key={row} className="d-flex justify-content-center align-items-center mb-1">
-                        <span className="fw-bold text-muted me-3" style={{ width: "20px" }}>{row}</span>
-                        {seatsByRow[row].map((seat) => {
-                          const isSelected = selectedSeats.some((s) => s.seatId === seat.seatId);
-                          let seatClass = "btn-outline-dark";
-                          
-                          if (seat.occupied) {
-                            seatClass = "btn-secondary text-white disabled-seat";
-                          } else if (isSelected) {
-                            seatClass = "btn-danger text-white";
-                          } else if (seat.seatType === "VIP") {
-                            seatClass = "btn-outline-warning";
-                          } else if (seat.seatType === "COUPLE") {
-                            seatClass = "btn-outline-info";
-                          }
-
-                          return (
-                            <button
-                              key={seat.seatId}
-                              disabled={seat.occupied || seat.status === "DISABLED"}
-                              className={`btn m-1 p-0 fw-bold d-flex align-items-center justify-content-center ${seatClass}`}
-                              style={{
-                                width: seat.seatType === "COUPLE" ? "80px" : "40px",
-                                height: "40px",
-                                fontSize: "11px",
-                                cursor: seat.occupied ? "not-allowed" : "pointer"
-                              }}
-                              onClick={() => handleSeatClick(seat)}
-                              title={
-                                seat.occupied 
-                                  ? `Seat ${row}${seat.seatColumn} (Occupied)` 
-                                  : `Seat ${row}${seat.seatColumn} (${seat.seatType}) - ${seat.price.toLocaleString()} VND`
-                              }
-                            >
-                              {row}{seat.seatColumn}
-                            </button>
-                          );
-                        })}
-                        <span className="fw-bold text-muted ms-3" style={{ width: "20px" }}>{row}</span>
-                      </div>
-                    ))}
+                  <div className="overflow-auto mb-4 py-3 border rounded bg-light">
+                    <SeatGrid
+                      rows={sortedRowKeys.map((row) => ({ label: row, seats: seatsByRow[row] }))}
+                      getSeatVariant={(seat) => {
+                        if (seat.occupied || seat.status === "DISABLED") return "disabled";
+                        if (selectedSeats.some((s) => s.seatId === seat.seatId)) return "selected";
+                        return seat.seatType === "VIP" ? "vip" : "normal";
+                      }}
+                      getSeatLabel={(seat) => `${seat.seatRow}${seat.seatColumn}`}
+                      isSeatClickable={(seat) => !(seat.occupied || seat.status === "DISABLED")}
+                      onSeatClick={handleSeatClick}
+                      getSeatTitle={(seat) =>
+                        seat.occupied || seat.status === "DISABLED"
+                          ? `Ghế ${seat.seatRow}${seat.seatColumn} (Đã đặt)`
+                          : `Ghế ${seat.seatRow}${seat.seatColumn} (${seat.seatType === "VIP" ? "VIP" : "Thường"}) - ${seat.price.toLocaleString()} VND`
+                      }
+                    />
                   </div>
 
                   {/* Legend */}
-                  <div className="d-flex flex-wrap justify-content-center gap-4 mb-4 text-muted small">
+                  <div className="d-flex flex-wrap justify-content-center gap-4 mb-4 small">
                     <div className="d-flex align-items-center">
-                      <span className="d-inline-block border border-dark me-2 bg-white" style={{ width: "20px", height: "20px", borderRadius: "4px" }}></span>
-                      <span>Standard</span>
+                      <span style={{ width: 20, height: 20, borderRadius: 2, background: "#fff", border: `2px solid ${SEAT_COLORS.normal.border}`, display: "inline-block" }} className="me-2"></span>
+                      <span>Thường</span>
                     </div>
                     <div className="d-flex align-items-center">
-                      <span className="d-inline-block border border-warning me-2 bg-white" style={{ width: "20px", height: "20px", borderRadius: "4px" }}></span>
-                      <span className="text-warning fw-semibold">VIP (+20K)</span>
+                      <span style={{ width: 20, height: 20, borderRadius: 2, background: "#fff", border: `2px solid ${SEAT_COLORS.vip.border}`, display: "inline-block" }} className="me-2"></span>
+                      <span style={{ color: SEAT_COLORS.vip.border }} className="fw-semibold">VIP (+20K)</span>
                     </div>
                     <div className="d-flex align-items-center">
-                      <span className="d-inline-block border border-info me-2 bg-white" style={{ width: "40px", height: "20px", borderRadius: "4px" }}></span>
-                      <span className="text-info fw-semibold">Couple (Double)</span>
+                      <span style={{ width: 20, height: 20, borderRadius: 2, background: SEAT_COLORS.selected.bg, display: "inline-block" }} className="me-2"></span>
+                      <span style={{ color: SEAT_COLORS.selected.bg }} className="fw-semibold">Đang chọn</span>
                     </div>
                     <div className="d-flex align-items-center">
-                      <span className="d-inline-block bg-danger me-2" style={{ width: "20px", height: "20px", borderRadius: "4px" }}></span>
-                      <span className="text-danger fw-semibold">Selected</span>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <span className="d-inline-block bg-secondary me-2" style={{ width: "20px", height: "20px", borderRadius: "4px" }}></span>
-                      <span>Occupied / Disabled</span>
+                      <span style={{ width: 20, height: 20, borderRadius: 2, background: SEAT_COLORS.disabled.bg, border: `1px solid ${SEAT_COLORS.disabled.border}`, display: "inline-block" }} className="me-2"></span>
+                      <span>Đã đặt</span>
                     </div>
                   </div>
 
@@ -576,6 +558,7 @@ export default function BookingPage() {
         </div>
       </div>
 
+      </div>
     </div>
   );
 }

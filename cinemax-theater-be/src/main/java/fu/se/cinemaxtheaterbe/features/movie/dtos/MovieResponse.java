@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.movie.dtos;
 
-import fu.se.cinemaxtheaterbe.entity.Genre;
+import fu.se.cinemaxtheaterbe.entity.movie.Genre;
 import fu.se.cinemaxtheaterbe.entity.enums.MovieStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,5 +33,4 @@ public class MovieResponse {
     private String trailerUrl;
     private MovieStatus status;
     private List<Genre> genres;
-    private boolean hasSchedules;
 }

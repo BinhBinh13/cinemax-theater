@@ -1,13 +1,14 @@
 package fu.se.cinemaxtheaterbe.features.booking.services;
 
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.entity.enums.SeatType;
-import fu.se.cinemaxtheaterbe.entity.theater.Booking;
-import fu.se.cinemaxtheaterbe.entity.theater.BookingFood;
-import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.entity.booking.Booking;
+import fu.se.cinemaxtheaterbe.entity.booking.BookingFood;
+import fu.se.cinemaxtheaterbe.entity.booking.Payment;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
 import fu.se.cinemaxtheaterbe.entity.theater.Seat;
 import fu.se.cinemaxtheaterbe.entity.theater.TheaterStock;
-import fu.se.cinemaxtheaterbe.entity.theater.Ticket;
+import fu.se.cinemaxtheaterbe.entity.booking.Ticket;
 import fu.se.cinemaxtheaterbe.features.auth.repositories.UserRepository;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingRequest;
 import fu.se.cinemaxtheaterbe.features.booking.dtos.BookingResponse;
@@ -15,21 +16,19 @@ import fu.se.cinemaxtheaterbe.features.booking.dtos.ScheduleSeatResponse;
 import fu.se.cinemaxtheaterbe.features.booking.repositories.BookingFoodRepository;
 import fu.se.cinemaxtheaterbe.features.booking.repositories.BookingRepository;
 import fu.se.cinemaxtheaterbe.features.booking.repositories.TicketRepository;
-import fu.se.cinemaxtheaterbe.features.booking.utils.VnPayUtil;
 import fu.se.cinemaxtheaterbe.features.fooddrink.repositories.TheaterStockRepository;
 import fu.se.cinemaxtheaterbe.features.movieschedule.repositories.MovieScheduleRepository;
+import fu.se.cinemaxtheaterbe.features.payment.repositories.PaymentRepository;
+import fu.se.cinemaxtheaterbe.features.payment.services.PaymentService;
 import fu.se.cinemaxtheaterbe.features.room.repositories.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,18 +45,8 @@ public class BookingServiceImpl implements BookingService {
     private final SeatRepository seatRepository;
     private final TheaterStockRepository stockRepository;
     private final UserRepository userRepository;
-
-    @Value("${vnpay.tmn-code}")
-    private String tmnCode;
-
-    @Value("${vnpay.hash-secret}")
-    private String hashSecret;
-
-    @Value("${vnpay.url}")
-    private String vnpayUrl;
-
-    @Value("${vnpay.return-url}")
-    private String returnUrl;
+    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional(readOnly = true)
@@ -104,10 +93,7 @@ public class BookingServiceImpl implements BookingService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .bookingDate(LocalDateTime.now())
-                .paymentStatus("PENDING")
-                .paymentMethod("VNPAY")
                 .status("PENDING")
-                .txnRef("CINEMAX" + System.currentTimeMillis() + new Random().nextInt(1000))
                 .build();
 
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -165,7 +151,18 @@ public class BookingServiceImpl implements BookingService {
 
         Booking savedBooking = bookingRepository.save(booking);
 
-        String paymentUrl = buildVnPayUrl(savedBooking, ipAddress);
+        String txnRef = "CINEMAX" + System.currentTimeMillis() + new Random().nextInt(1000);
+        Payment payment = Payment.builder()
+                .booking(savedBooking)
+                .paymentStatus("PENDING")
+                .paymentMethod("VNPAY")
+                .txnRef(txnRef)
+                .build();
+        paymentRepository.save(payment);
+        savedBooking.setPayment(payment);
+
+        String orderInfo = "Thanh toan ve xem phim Cinemax. Ma dat ve: " + txnRef;
+        String paymentUrl = paymentService.buildPaymentUrl(txnRef, savedBooking.getTotalAmount(), orderInfo, ipAddress);
 
         return mapToResponse(savedBooking, paymentUrl);
     }
@@ -178,19 +175,21 @@ public class BookingServiceImpl implements BookingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing transaction reference");
         }
 
-        Booking booking = bookingRepository.findByTxnRef(txnRef)
+        Payment payment = paymentRepository.findByTxnRef(txnRef)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Booking not found for reference: " + txnRef));
+        Booking booking = payment.getBooking();
 
         if (!booking.getStatus().equals("PENDING")) {
             return mapToResponse(booking, null);
         }
 
-        boolean isValidSignature = verifyVnPaySignature(vnpayParams);
+        boolean isValidSignature = paymentService.verifySignature(vnpayParams);
         if (!isValidSignature) {
             log.error("Invalid VNPAY signature for txnRef: {}", txnRef);
-            booking.setPaymentStatus("FAILED");
+            payment.setPaymentStatus("FAILED");
             booking.setStatus("CANCELLED");
+            paymentRepository.save(payment);
             bookingRepository.save(booking);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Signature verification failed");
         }
@@ -199,9 +198,9 @@ public class BookingServiceImpl implements BookingService {
         String payDate = vnpayParams.get("vnp_PayDate");
 
         if ("00".equals(responseCode)) {
-            booking.setPaymentStatus("PAID");
+            payment.setPaymentStatus("PAID");
+            payment.setPayDate(payDate);
             booking.setStatus("CONFIRMED");
-            booking.setPayDate(payDate);
 
             // Deduct food stocks
             if (booking.getFoods() != null) {
@@ -216,11 +215,12 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         } else {
-            booking.setPaymentStatus("FAILED");
+            payment.setPaymentStatus("FAILED");
+            payment.setPayDate(payDate);
             booking.setStatus("CANCELLED");
-            booking.setPayDate(payDate);
         }
 
+        paymentRepository.save(payment);
         Booking updatedBooking = bookingRepository.save(booking);
         return mapToResponse(updatedBooking, null);
     }
@@ -236,104 +236,8 @@ public class BookingServiceImpl implements BookingService {
     private BigDecimal calculateSeatPrice(BigDecimal basePrice, SeatType seatType) {
         if (seatType == SeatType.VIP) {
             return basePrice.add(new BigDecimal("20000"));
-        } else if (seatType == SeatType.COUPLE) {
-            return basePrice.multiply(new BigDecimal("2"));
         }
         return basePrice;
-    }
-
-    private String buildVnPayUrl(Booking booking, String ipAddress) {
-        String vnp_Version = "2.1.0";
-        String vnp_Command = "pay";
-        String vnp_TxnRef = booking.getTxnRef();
-        String vnp_OrderInfo = "Thanh toan ve xem phim Cinemax. Ma dat ve: " + booking.getTxnRef();
-        String vnp_OrderType = "other";
-        String vnp_Locale = "vn";
-
-        long amountInCents = booking.getTotalAmount().multiply(new BigDecimal("100")).longValue();
-
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", vnp_Version);
-        vnp_Params.put("vnp_Command", vnp_Command);
-        vnp_Params.put("vnp_TmnCode", tmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amountInCents));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
-        vnp_Params.put("vnp_OrderType", vnp_OrderType);
-        vnp_Params.put("vnp_Locale", vnp_Locale);
-        vnp_Params.put("vnp_ReturnUrl", returnUrl);
-        vnp_Params.put("vnp_IpAddr", ipAddress);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        vnp_Params.put("vnp_CreateDate", LocalDateTime.now().format(formatter));
-
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
-
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
-            String fieldValue = vnp_Params.get(fieldName);
-            if (fieldValue != null && !fieldValue.isEmpty()) {
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-
-                if (itr.hasNext()) {
-                    query.append('&');
-                    hashData.append('&');
-                }
-            }
-        }
-
-        String queryUrl = query.toString();
-        String secureHash = VnPayUtil.hmacSHA512(hashSecret, hashData.toString());
-        queryUrl += "&vnp_SecureHash=" + secureHash;
-
-        return vnpayUrl + "?" + queryUrl;
-    }
-
-    private boolean verifyVnPaySignature(Map<String, String> params) {
-        String secureHash = params.get("vnp_SecureHash");
-        if (secureHash == null) {
-            return false;
-        }
-
-        Map<String, String> filterParams = new HashMap<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            String key = entry.getKey();
-            String val = entry.getValue();
-            if (key != null && !key.equals("vnp_SecureHash") && !key.equals("vnp_SecureHashType") && val != null
-                    && !val.isEmpty()) {
-                filterParams.put(key, val);
-            }
-        }
-
-        List<String> fieldNames = new ArrayList<>(filterParams.keySet());
-        Collections.sort(fieldNames);
-
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
-            String fieldValue = filterParams.get(fieldName);
-            sb.append(fieldName);
-            sb.append('=');
-            sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-            if (itr.hasNext()) {
-                sb.append('&');
-            }
-        }
-
-        String computedHash = VnPayUtil.hmacSHA512(hashSecret, sb.toString());
-        return computedHash.equalsIgnoreCase(secureHash);
     }
 
     private BookingResponse mapToResponse(Booking booking, String paymentUrl) {
@@ -351,10 +255,11 @@ public class BookingServiceImpl implements BookingService {
 
         Schedule schedule = booking.getSchedule();
         String showtime = schedule.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy"));
+        Payment payment = booking.getPayment();
 
         return BookingResponse.builder()
                 .bookingId(booking.getId())
-                .txnRef(booking.getTxnRef())
+                .txnRef(payment != null ? payment.getTxnRef() : null)
                 .movieTitle(schedule.getMovie().getTitle())
                 .roomName(schedule.getRoom().getName())
                 .showtime(showtime)
@@ -365,8 +270,9 @@ public class BookingServiceImpl implements BookingService {
                 .foods(foodResponses)
                 .totalAmount(booking.getTotalAmount())
                 .status(booking.getStatus())
-                .paymentStatus(booking.getPaymentStatus())
-                .paymentMethod(booking.getPaymentMethod())
+                .paymentStatus(payment != null ? payment.getPaymentStatus() : null)
+                .paymentMethod(payment != null ? payment.getPaymentMethod() : null)
+                .payDate(payment != null ? payment.getPayDate() : null)
                 .bookingDate(booking.getBookingDate())
                 .paymentUrl(paymentUrl)
                 .build();

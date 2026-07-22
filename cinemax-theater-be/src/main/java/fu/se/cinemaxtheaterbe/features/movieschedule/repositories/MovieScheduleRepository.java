@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.movieschedule.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -30,6 +30,7 @@ public class BookingResponse {
     private String status;
     private String paymentStatus;
     private String paymentMethod;
+    private String payDate;
     private LocalDateTime bookingDate;
     private String paymentUrl;
 

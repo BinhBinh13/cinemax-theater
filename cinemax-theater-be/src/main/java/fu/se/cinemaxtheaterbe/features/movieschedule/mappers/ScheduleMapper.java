@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.movieschedule.mappers;
 
-import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

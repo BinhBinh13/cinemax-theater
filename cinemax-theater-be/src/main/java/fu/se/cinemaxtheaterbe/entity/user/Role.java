@@ -1,5 +1,6 @@
-package fu.se.cinemaxtheaterbe.entity;
+package fu.se.cinemaxtheaterbe.entity.user;
 
+import fu.se.cinemaxtheaterbe.entity.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -15,11 +15,6 @@ export async function createBooking(payload) {
   return response.data;
 }
 
-export async function verifyPayment(params) {
-  const response = await axiosClient.get('/api/v1/bookings/verify-payment', { params });
-  return response.data;
-}
-
 export async function getScheduleById(scheduleId) {
   const response = await axiosClient.get(`/api/v1/schedules/${scheduleId}`);
   return response.data;

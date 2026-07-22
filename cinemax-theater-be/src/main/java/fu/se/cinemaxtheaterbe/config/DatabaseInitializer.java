@@ -1,11 +1,11 @@
 package fu.se.cinemaxtheaterbe.config;
 
-import fu.se.cinemaxtheaterbe.entity.Movie;
-import fu.se.cinemaxtheaterbe.entity.Role;
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.movie.Movie;
+import fu.se.cinemaxtheaterbe.entity.user.Role;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.entity.enums.*;
 import fu.se.cinemaxtheaterbe.entity.theater.Room;
-import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
 import fu.se.cinemaxtheaterbe.entity.theater.Seat;
 import fu.se.cinemaxtheaterbe.entity.theater.Theater;
 import fu.se.cinemaxtheaterbe.features.auth.repositories.RoleRepository;
@@ -164,10 +164,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 String rowLabel = String.valueOf((char) ('A' + r - 1));
                 for (int c = 1; c <= 10; c++) {
                     SeatType type = SeatType.NORMAL;
-                    if (r >= 5 && r <= 7) {
-                        type = SeatType.VIP; // Rows E, F, G are VIP
-                    } else if (r == 8) {
-                        type = SeatType.COUPLE; // Row H is Couple
+                    if (r >= 5 && r <= 8) {
+                        type = SeatType.VIP; // Rows E, F, G, H are VIP
                     }
                     Seat seat = Seat.builder()
                             .seatRow(rowLabel)
@@ -185,10 +183,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 String rowLabel = String.valueOf((char) ('A' + r - 1));
                 for (int c = 1; c <= 8; c++) {
                     SeatType type = SeatType.NORMAL;
-                    if (r >= 4 && r <= 5) {
-                        type = SeatType.VIP; // Rows D, E are VIP
-                    } else if (r == 6) {
-                        type = SeatType.COUPLE; // Row F is Couple
+                    if (r >= 4 && r <= 6) {
+                        type = SeatType.VIP; // Rows D, E, F are VIP
                     }
                     Seat seat = Seat.builder()
                             .seatRow(rowLabel)

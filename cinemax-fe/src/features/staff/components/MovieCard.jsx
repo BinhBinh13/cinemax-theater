@@ -49,8 +49,6 @@ export default function MovieCard({ movie, onDelete }) {
         <button
           className="btn btn-sm btn-outline-secondary"
           style={{ fontSize: 12, padding: "2px 10px" }}
-          disabled={movie.hasSchedules}
-          title={movie.hasSchedules ? "This movie already has schedules and can no longer be edited" : undefined}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/staff/movies/${movie.id}/edit`);
@@ -61,8 +59,6 @@ export default function MovieCard({ movie, onDelete }) {
         <button
           className="btn btn-sm btn-outline-danger"
           style={{ fontSize: 12, padding: "2px 10px" }}
-          disabled={movie.hasSchedules}
-          title={movie.hasSchedules ? "This movie already has schedules and cannot be deleted" : undefined}
           onClick={(e) => {
             e.stopPropagation();
             onDelete?.(movie.id, movie.title);

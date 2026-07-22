@@ -1,7 +1,7 @@
 package fu.se.cinemaxtheaterbe.features.auth.controllers;
 
-import fu.se.cinemaxtheaterbe.entity.Role;
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.Role;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.features.auth.dtos.ProfileUpdateRequest;
 import fu.se.cinemaxtheaterbe.features.auth.dtos.UserResponse;
 import fu.se.cinemaxtheaterbe.features.auth.repositories.UserRepository;

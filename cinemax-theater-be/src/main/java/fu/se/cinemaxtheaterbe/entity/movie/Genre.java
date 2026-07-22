@@ -1,4 +1,4 @@
-package fu.se.cinemaxtheaterbe.entity;
+package fu.se.cinemaxtheaterbe.entity.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

@@ -5,6 +5,7 @@ import LoginPage from "@/features/auth/pages/LoginPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
 import MovieCatalogPage from "@/features/public/pages/MovieCatalogPage";
 import MovieDetailsPage from "@/features/public/pages/MovieDetailsPage";
+import TheaterRoomsPage from "@/features/public/pages/TheaterRoomsPage";
 import BookingPage from "@/features/customer/pages/BookingPage";
 import PaymentCallbackPage from "@/features/customer/pages/PaymentCallbackPage";
 import BookingHistoryPage from "@/features/public/pages/BookingHistoryPage";
@@ -46,6 +47,14 @@ function App() {
         element={
           <CustomerRoute>
             <MovieCatalogPage />
+          </CustomerRoute>
+        }
+      />
+      <Route
+        path="/theaters"
+        element={
+          <CustomerRoute>
+            <TheaterRoomsPage />
           </CustomerRoute>
         }
       />

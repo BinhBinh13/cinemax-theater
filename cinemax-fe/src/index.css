@@ -191,4 +191,315 @@ code {
 
 .cinema-footer {
   background: #f8f9fa;
+}
+
+/* ==========================================
+   CINEMAX Customer-facing Theme (retro cinema look)
+   Scoped under .cinemax-page-container, safe alongside
+   the theme above used by Staff/Admin pages.
+   ========================================== */
+:root {
+  --cinemax-red: #e50914;
+  --cinemax-dark-red: #b80710;
+  --cinemax-cream: #fdfcf0;
+  --cinemax-cream-dark: #f2efe9;
+  --cinemax-dark: #222222;
+  --cinemax-black: #111111;
+  --cinemax-gold: #e0a800;
+  --cinemax-brick: #b25232;
+  --cinemax-border: #e2dfd7;
+}
+
+.cinemax-page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--cinemax-cream);
+  min-height: 100vh;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  border-left: 2px solid #57291a;
+  border-right: 2px solid #57291a;
+}
+
+/* Theater-wall backdrop behind the centered customer container.
+   Scoped with :has() so it never bleeds into Staff/Admin pages,
+   which don't render .cinemax-page-container. */
+body:has(.cinemax-page-container) {
+  background: #231d1b url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30"><rect width="58" height="13" x="1" y="1" fill="%238a381f" rx="1"/><rect width="28" height="13" x="1" y="16" fill="%23772f19" rx="1"/><rect width="28" height="13" x="31" y="16" fill="%23772f19" rx="1"/></svg>') repeat;
+}
+
+/* Perforated Film Strip Borders */
+.film-strip-border {
+  height: 12px;
+  background-color: var(--cinemax-red);
+  background-image: radial-gradient(#ffffff 35%, transparent 40%);
+  background-size: 16px 12px;
+  background-repeat: repeat-x;
+  background-position: center;
+  border-top: 1px solid #a00d20;
+  border-bottom: 1px solid #a00d20;
+}
+
+/* CINEMAX Header Styles */
+.cinemax-top-utility {
+  background-color: #fdfcf0;
+  font-size: 12px;
+  border-bottom: 1px solid #e8e5dc;
+  padding: 6px 0;
+}
+
+.cinemax-top-utility a {
+  color: #555555;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.cinemax-top-utility a:hover {
+  color: var(--cinemax-red);
+}
+
+.cinemax-main-navbar {
+  background-color: #fdfcf0;
+  padding: 12px 0;
+}
+
+.cinemax-logo-text {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--cinemax-red);
+  letter-spacing: 1px;
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 1px 1px 0px #8a0b1c;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cinemax-logo-star {
+  color: var(--cinemax-gold);
+  font-size: 24px;
+  margin-left: 2px;
+  transform: translateY(-8px);
+}
+
+.cinemax-nav-link {
+  font-weight: 700;
+  color: #222222 !important;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 8px 16px !important;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.cinemax-nav-link:hover, .cinemax-nav-link.active {
+  color: var(--cinemax-red) !important;
+}
+
+.cinemax-dropdown-nav .dropdown-toggle {
+  font-weight: 700;
+  color: #222222 !important;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 8px 16px !important;
+  transition: color 0.2s;
+}
+
+.cinemax-dropdown-nav .dropdown-toggle:hover {
+  color: var(--cinemax-red) !important;
+}
+
+.cinemax-dropdown-nav:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+
+.cinemax-dropdown-nav .dropdown-menu {
+  border: 2px solid var(--cinemax-red);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  background-color: #ffffff;
+  padding: 6px 0;
+}
+
+.cinemax-dropdown-nav .dropdown-item {
+  font-size: 14px;
+  color: #222222;
+  transition: all 0.2s ease;
+}
+
+.cinemax-dropdown-nav .dropdown-item:hover {
+  background-color: #fdfcf0;
+  color: var(--cinemax-red);
+  padding-left: 20px;
+}
+
+.cinemax-nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background-color: var(--cinemax-red);
+  border-radius: 2px;
+}
+
+/* Red Ticket Button */
+.cinemax-btn-ticket {
+  background: linear-gradient(180deg, #e50914 0%, #b80710 100%);
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: 4px;
+  padding: 6px 14px;
+  border: 1px solid #8d0012;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.cinemax-btn-ticket:hover {
+  background: linear-gradient(180deg, #ff1e3d 0%, #e50914 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(229,9,20,0.4);
+}
+
+/* Movie Selection Retro Title */
+.cinemax-section-title {
+  text-align: center;
+  position: relative;
+  margin: 35px 0 25px 0;
+}
+
+.cinemax-section-title h3 {
+  display: inline-block;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 34px;
+  letter-spacing: 2px;
+  color: #222222;
+  text-transform: uppercase;
+  background-color: var(--cinemax-cream);
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.cinemax-section-title::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top: 1px solid #222222;
+  border-bottom: 1px solid #222222;
+  z-index: 0;
+}
+
+/* Movie Cards - Poster Frame Style */
+.cinemax-movie-card {
+  background: #ffffff;
+  border: 1px solid #e0ddd5;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.cinemax-movie-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(229, 9, 20, 0.2);
+  border-color: var(--cinemax-red);
+}
+
+.cinemax-poster-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 145%;
+  overflow: hidden;
+  background: #111;
+}
+
+.cinemax-poster-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cinemax-movie-card:hover .cinemax-poster-img {
+  transform: scale(1.06);
+}
+
+.cinemax-movie-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cinemax-movie-card:hover .cinemax-movie-overlay {
+  opacity: 1;
+}
+
+/* CINEMAX Auth Card (Login / Register) */
+.cinemax-auth-wrapper {
+  background: #ffffff;
+  border: 2px solid var(--cinemax-red);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+.cinemax-auth-header {
+  background: linear-gradient(135deg, var(--cinemax-red) 0%, var(--cinemax-dark-red) 100%);
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+/* CINEMAX Footer (customer pages) */
+.cinemax-footer {
+  background-color: #fdfcf0;
+  border-top: 2px solid #222222;
+  padding: 40px 0 20px 0;
+  font-size: 13px;
+  color: #555555;
+}
+
+.cinemax-footer-bottom {
+  background-color: #1a1514;
+  color: #aaaaaa;
+  padding: 15px 0;
+  font-size: 12px;
+  text-align: center;
+  border-top: 4px solid var(--cinemax-red);
+}
+
+/* Shared seat grid cell (Staff room editor, Theater browser, Ticket booking) */
+.seat-cell {
+  transition: filter 0.1s;
+}
+
+.seat-cell:hover {
+  filter: brightness(0.92);
 }

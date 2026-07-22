@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.auth.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

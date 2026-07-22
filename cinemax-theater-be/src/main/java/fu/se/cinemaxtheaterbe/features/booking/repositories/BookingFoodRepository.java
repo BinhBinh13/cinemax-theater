@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.booking.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.theater.BookingFood;
+import fu.se.cinemaxtheaterbe.entity.booking.BookingFood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

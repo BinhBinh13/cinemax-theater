@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.auth.services;
 
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.entity.enums.UserStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

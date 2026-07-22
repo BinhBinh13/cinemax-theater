@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.movie.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.Movie;
+import fu.se.cinemaxtheaterbe.entity.movie.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

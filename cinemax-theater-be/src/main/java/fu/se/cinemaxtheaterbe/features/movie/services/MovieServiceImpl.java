@@ -1,9 +1,8 @@
 package fu.se.cinemaxtheaterbe.features.movie.services;
 
-import fu.se.cinemaxtheaterbe.entity.Genre;
-import fu.se.cinemaxtheaterbe.entity.Movie;
+import fu.se.cinemaxtheaterbe.entity.movie.Genre;
+import fu.se.cinemaxtheaterbe.entity.movie.Movie;
 import fu.se.cinemaxtheaterbe.entity.enums.MovieStatus;
-import fu.se.cinemaxtheaterbe.features.booking.repositories.BookingRepository;
 import fu.se.cinemaxtheaterbe.features.genre.repositories.GenreRepository;
 import fu.se.cinemaxtheaterbe.features.movie.dtos.MovieRequest;
 import fu.se.cinemaxtheaterbe.features.movie.dtos.MovieResponse;
@@ -26,7 +25,6 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
     private final GenreRepository genreRepository;
-    private final BookingRepository bookingRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,10 +58,6 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse updateMovie(Long id, MovieRequest request) {
         Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found: " + id));
-        if (hasUpcomingBookedSchedule(movie)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Cannot edit movie \"" + movie.getTitle() + "\": it has an upcoming schedule that already has bookings.");
-        }
         movieMapper.updateEntity(movie, request);
         movie.setGenres(resolveGenres(request.getGenreIds()));
         return movieMapper.toResponse(movieRepository.save(movie));
@@ -74,17 +68,9 @@ public class MovieServiceImpl implements MovieService {
     public void deleteMovie(Long id) {
         Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found: " + id));
-        if (hasUpcomingBookedSchedule(movie)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Cannot delete movie \"" + movie.getTitle() + "\": it has an upcoming schedule that already has bookings.");
-        }
         movie.setDeleted(true);
         movie.setDeletedAt(LocalDateTime.now());
         movieRepository.save(movie);
-    }
-
-    private boolean hasUpcomingBookedSchedule(Movie movie) {
-        return !bookingRepository.findByMovieIdAndUpcomingSchedule(movie.getId(), LocalDateTime.now()).isEmpty();
     }
 
     private List<Genre> resolveGenres(List<Long> genreIds) {

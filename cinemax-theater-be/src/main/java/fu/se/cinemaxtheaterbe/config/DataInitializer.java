@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.config;
 
-import fu.se.cinemaxtheaterbe.entity.Genre;
+import fu.se.cinemaxtheaterbe.entity.movie.Genre;
 import fu.se.cinemaxtheaterbe.entity.theater.Theater;
 import fu.se.cinemaxtheaterbe.features.genre.repositories.GenreRepository;
 import fu.se.cinemaxtheaterbe.features.theater.repositories.TheaterRepository;

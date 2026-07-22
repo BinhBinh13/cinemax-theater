@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { getMovieById, getScheduleByMovieId } from '@/features/staff/services/movieService'
 import CustomerHeader from '@/shared/components/CustomerHeader'
+import { useLanguage } from '@/app/providers/LanguageProvider'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -17,6 +18,7 @@ const MovieDetailsPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const MovieDetailsPage = () => {
   const groupedSchedules = groupSchedulesByDate()
 
   return (
-    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
+    <div className="cinemax-page-container text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">
@@ -93,13 +95,26 @@ const MovieDetailsPage = () => {
               {/* Breadcrumb / Back button */}
               <div className="mb-4">
                 <Button 
-                  variant="link" 
-                  className="text-secondary p-0 text-decoration-none"
+                  variant="outline-danger" 
+                  size="sm"
+                  className="fw-bold px-3 py-1.5 d-inline-flex align-items-center gap-2 bg-white shadow-sm"
                   onClick={() => navigate('/')}
                 >
-                  ← Quay lại danh sách phim
+                  🏠 {t('backToHome')}
                 </Button>
               </div>
+
+              {/* Horizontal banner image */}
+              {movie.banner && (
+                <div className="mb-4 rounded overflow-hidden shadow-sm">
+                  <img
+                    src={movie.banner}
+                    alt={`${movie.title} banner`}
+                    className="w-100"
+                    style={{ maxHeight: '360px', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
 
               {/* Movie info banner */}
               <Row className="g-4 mb-5">
@@ -120,12 +135,35 @@ const MovieDetailsPage = () => {
                     </Badge>
                   </div>
 
-                  <div className="d-flex gap-4 mb-4 text-secondary small flex-wrap">
+                  <div className="d-flex gap-4 mb-3 text-secondary small flex-wrap">
                     <span>⏱️ <strong>Thời lượng:</strong> {movie.duration} phút</span>
                     {movie.screeningStart && (
                       <span>📅 <strong>Khởi chiếu:</strong> {new Date(movie.screeningStart).toLocaleDateString('vi-VN')}</span>
                     )}
+                    {movie.rating != null && (
+                      <span>⭐ <strong>Đánh giá:</strong> {movie.rating}/10</span>
+                    )}
                   </div>
+
+                  <div className="d-flex gap-4 mb-4 text-secondary small flex-wrap">
+                    {movie.director && (
+                      <span>🎬 <strong>Đạo diễn:</strong> {movie.director}</span>
+                    )}
+                    {movie.cast && (
+                      <span>👥 <strong>Diễn viên:</strong> {movie.cast}</span>
+                    )}
+                    {movie.language && (
+                      <span>🌐 <strong>Ngôn ngữ:</strong> {movie.language}</span>
+                    )}
+                  </div>
+
+                  {movie.genres?.length > 0 && (
+                    <div className="d-flex gap-2 mb-4 flex-wrap">
+                      {movie.genres.map((genre) => (
+                        <Badge key={genre.id} bg="secondary">{genre.name}</Badge>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="mb-4">
                     <h5 className="text-dark fw-semibold mb-2">Tóm Tắt Phim</h5>
@@ -133,6 +171,19 @@ const MovieDetailsPage = () => {
                       {movie.description || 'Chưa có thông tin tóm tắt nội dung phim.'}
                     </p>
                   </div>
+
+                  {movie.trailerUrl && (
+                    <Button
+                      variant="outline-dark"
+                      size="sm"
+                      href={movie.trailerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mb-4"
+                    >
+                      ▶️ Xem Trailer
+                    </Button>
+                  )}
                 </Col>
               </Row>
 

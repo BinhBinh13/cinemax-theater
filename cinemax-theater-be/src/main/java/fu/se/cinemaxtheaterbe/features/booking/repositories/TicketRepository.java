@@ -1,6 +1,6 @@
 package fu.se.cinemaxtheaterbe.features.booking.repositories;
 
-import fu.se.cinemaxtheaterbe.entity.theater.Ticket;
+import fu.se.cinemaxtheaterbe.entity.booking.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

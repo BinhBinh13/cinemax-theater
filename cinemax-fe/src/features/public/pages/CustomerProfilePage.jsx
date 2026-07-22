@@ -73,7 +73,7 @@ const CustomerProfilePage = () => {
   }
 
   return (
-    <div className="cinema-bg text-dark min-vh-100 d-flex flex-column">
+    <div className="cinemax-page-container text-dark min-vh-100 d-flex flex-column">
       <CustomerHeader />
 
       <main className="flex-grow-1 py-5">

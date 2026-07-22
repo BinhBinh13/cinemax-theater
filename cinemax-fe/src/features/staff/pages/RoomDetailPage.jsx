@@ -2,37 +2,13 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Alert } from 'react-bootstrap'
 import StaffSideBar from '../components/StaffSideBar'
+import SeatGrid from '@/shared/components/SeatGrid'
+import { buildSeatGrid } from '@/shared/utils/seatLayout'
 import {
   getRoomDetail,
   updateSeatType,
   updateSeatStatus,
 } from '../services/roomService'
-
-const COLORS = {
-  thuong: { border: '#2e9b4f', text: '#1f7a3a', bg: '#fff' },
-  vip: { border: '#d0342c', text: '#c0392b', bg: '#fff' },
-  disabled: { bg: '#eee', text: '#aaa', border: '#ccc' },
-}
-
-function buildSeatGrid(room) {
-  const dbMap = {}
-  ;(room.seats || []).forEach((s) => {
-    const key = `${s.seatRow}_${s.seatColumn}`
-    dbMap[key] = s
-  })
-
-  const rows = []
-  for (let r = 0; r < (room.rowCount || 0); r++) {
-    const rowLabel = String.fromCharCode(65 + r)
-    const cols = []
-    for (let c = 1; c <= (room.columnCount || 0); c++) {
-      const key = `${rowLabel}_${c}`
-      cols.push(dbMap[key] || { id: `new_${key}`, seatRow: rowLabel, seatColumn: c, seatType: 'NORMAL', status: 'ACTIVE' })
-    }
-    rows.push({ label: rowLabel, seats: cols })
-  }
-  return rows
-}
 
 export default function RoomDetailPage() {
   const { roomId } = useParams()
@@ -213,52 +189,20 @@ export default function RoomDetailPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, marginTop: 20 }}>
-            {gridRows.map((row) => (
-              <div key={row.label} style={{ display: 'flex', gap: 5 }}>
-                {row.seats.map((seat) => {
-                  const isActive = seat.status === 'ACTIVE'
-                  const isVip = seat.seatType === 'VIP'
-                  const c = isActive
-                    ? (isVip ? COLORS.vip : COLORS.thuong)
-                    : COLORS.disabled
-                  return (
-                    <div
-                      key={seat.id}
-                      style={{
-                        width: 40, height: 26,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 11, fontWeight: 700,
-                        background: c.bg,
-                        borderRadius: 2,
-                        border: isActive ? `1.5px solid ${c.border}` : `1.5px solid ${c.border}`,
-                        color: c.text,
-                        cursor: !isActive ? 'not-allowed' : 'pointer',
-                        opacity: isActive ? 1 : 0.6,
-                        userSelect: 'none',
-                        transition: 'all 0.1s',
-                      }}
-                      onClick={() => handleSeatClick(seat)}
-                      onContextMenu={(e) => handleRightClick(e, seat)}
-                      onMouseEnter={(e) => {
-                        if (!isActive) return
-                        e.currentTarget.style.filter = 'brightness(0.92)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.filter = 'none'
-                      }}
-                      title={
-                        isActive
-                          ? `${seat.seatRow}${seat.seatColumn} (${isVip ? 'VIP' : 'Thường'}) - Click: đổi loại, Chuột phải: vô hiệu`
-                          : `${seat.seatRow}${seat.seatColumn} (Đã vô hiệu) - Click: kích hoạt`
-                      }
-                    >
-                      {seat.seatRow}{seat.seatColumn}
-                    </div>
-                  )
-                })}
-              </div>
-            ))}
+          <div style={{ marginTop: 20 }}>
+            <SeatGrid
+              rows={gridRows}
+              getSeatVariant={(seat) =>
+                seat.status !== 'ACTIVE' ? 'disabled' : seat.seatType === 'VIP' ? 'vip' : 'normal'
+              }
+              onSeatClick={handleSeatClick}
+              onSeatContextMenu={handleRightClick}
+              getSeatTitle={(seat) =>
+                seat.status === 'ACTIVE'
+                  ? `${seat.seatRow}${seat.seatColumn} (${seat.seatType === 'VIP' ? 'VIP' : 'Thường'}) - Click: đổi loại, Chuột phải: vô hiệu`
+                  : `${seat.seatRow}${seat.seatColumn} (Đã vô hiệu) - Click: kích hoạt`
+              }
+            />
           </div>
 
           <div style={{

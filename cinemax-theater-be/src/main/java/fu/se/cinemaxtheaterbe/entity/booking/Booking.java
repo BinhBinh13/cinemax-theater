@@ -1,7 +1,8 @@
-package fu.se.cinemaxtheaterbe.entity.theater;
+package fu.se.cinemaxtheaterbe.entity.booking;
 
 import fu.se.cinemaxtheaterbe.entity.Auditable;
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

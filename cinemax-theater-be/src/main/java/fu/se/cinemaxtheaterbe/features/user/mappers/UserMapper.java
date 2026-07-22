@@ -1,7 +1,7 @@
 package fu.se.cinemaxtheaterbe.features.user.mappers;
 
-import fu.se.cinemaxtheaterbe.entity.Role;
-import fu.se.cinemaxtheaterbe.entity.User;
+import fu.se.cinemaxtheaterbe.entity.user.Role;
+import fu.se.cinemaxtheaterbe.entity.user.User;
 import fu.se.cinemaxtheaterbe.features.user.dtos.UserRequest;
 import fu.se.cinemaxtheaterbe.features.user.dtos.UserResponse;
 import org.mapstruct.Mapper;

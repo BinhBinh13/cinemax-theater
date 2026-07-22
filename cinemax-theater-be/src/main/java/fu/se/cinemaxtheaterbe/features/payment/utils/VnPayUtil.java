@@ -1,4 +1,4 @@
-package fu.se.cinemaxtheaterbe.features.booking.utils;
+package fu.se.cinemaxtheaterbe.features.payment.utils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

@@ -1,10 +1,10 @@
 package fu.se.cinemaxtheaterbe.features.movieschedule.services;
 
-import fu.se.cinemaxtheaterbe.entity.Movie;
+import fu.se.cinemaxtheaterbe.entity.movie.Movie;
 import fu.se.cinemaxtheaterbe.entity.enums.MovieScheduleStatus;
 import fu.se.cinemaxtheaterbe.entity.enums.RoomStatus;
 import fu.se.cinemaxtheaterbe.entity.theater.Room;
-import fu.se.cinemaxtheaterbe.entity.theater.Schedule;
+import fu.se.cinemaxtheaterbe.entity.movie.Schedule;
 import fu.se.cinemaxtheaterbe.features.booking.repositories.BookingRepository;
 import fu.se.cinemaxtheaterbe.features.movie.repositories.MovieRepository;
 import fu.se.cinemaxtheaterbe.features.movieschedule.dtos.ScheduleRequest;

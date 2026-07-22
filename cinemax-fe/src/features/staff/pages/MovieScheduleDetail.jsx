@@ -354,7 +354,11 @@ export default function MovieScheduleDetail() {
                 max={movie?.screeningEnd}
                 value={form.date}
                 onChange={(e) =>
-                  setForm({ ...form, date: e.target.value, roomId: "" })
+                  setForm({
+                    date: e.target.value,
+                    startTime: form.startTime,
+                    roomId: "",
+                  })
                 }
               />
             </Form.Group>
@@ -365,7 +369,11 @@ export default function MovieScheduleDetail() {
                 required
                 value={form.startTime}
                 onChange={(e) =>
-                  setForm({ ...form, startTime: e.target.value, roomId: "" })
+                  setForm({
+                    date: form.date,
+                    startTime: e.target.value,
+                    roomId: "",
+                  })
                 }
               />
             </Form.Group>
@@ -375,7 +383,13 @@ export default function MovieScheduleDetail() {
                 required
                 disabled={!form.date || !form.startTime || loadingRooms}
                 value={form.roomId}
-                onChange={(e) => setForm({ ...form, roomId: e.target.value })}
+                onChange={(e) =>
+                  setForm({
+                    date: form.date,
+                    startTime: form.startTime,
+                    roomId: e.target.value,
+                  })
+                }
               >
                 <option value="">
                   {!form.date || !form.startTime

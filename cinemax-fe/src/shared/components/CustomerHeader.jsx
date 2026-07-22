@@ -1,13 +1,15 @@
 import React from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/app/providers/AuthContext'
+import { useLanguage } from '@/app/providers/LanguageProvider'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
-import Button from 'react-bootstrap/Button'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 
 const CustomerHeader = () => {
   const { user, logout, isAuthenticated } = useAuth()
+  const { lang, setLang, t } = useLanguage()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -16,119 +18,108 @@ const CustomerHeader = () => {
   }
 
   return (
-    <Navbar collapseOnSelect expand="lg" variant="light" style={{ background: '#ffffff', borderBottom: '1px solid #e5e7eb' }} className="py-2.5 sticky-top">
-      <Container>
-        <Navbar.Brand as={Link} to="/" className="cinema-logo text-danger fw-bold fs-3">
-          CINE<span className="text-gold">MAX</span>
-        </Navbar.Brand>
+    <header className="cinemax-header-section sticky-top shadow-sm">
+      {/* Top Utility Bar */}
+      <div className="cinemax-top-utility">
+        <Container className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center gap-3">
+            <span className="badge bg-danger text-white px-2 py-1">CINEMAX</span>
+            <span className="small text-secondary fw-semibold d-none d-sm-inline">
+              {t('promoNotice')}
+            </span>
+          </div>
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto ms-lg-4">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              end
-              style={({ isActive }) => ({
-                color: isActive ? '#e50914' : '#495057',
-                fontWeight: isActive ? '600' : '400',
-                transition: 'color 0.2s',
-              })}
-              className="px-3"
-            >
-              Phim Đang Chiếu
-            </Nav.Link>
-
-            {isAuthenticated && (
-              <>
-                <Nav.Link
-                  as={NavLink}
-                  to="/history"
-                  style={({ isActive }) => ({
-                    color: isActive ? '#e50914' : '#495057',
-                    fontWeight: isActive ? '600' : '400',
-                    transition: 'color 0.2s',
-                  })}
-                  className="px-3"
-                >
-                  Lịch Sử Đặt Vé
-                </Nav.Link>
-                <Nav.Link
-                  as={NavLink}
-                  to="/profile"
-                  style={({ isActive }) => ({
-                    color: isActive ? '#e50914' : '#495057',
-                    fontWeight: isActive ? '600' : '400',
-                    transition: 'color 0.2s',
-                  })}
-                  className="px-3"
-                >
-                  Hồ Sơ Cá Nhân
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
-
-          <Nav className="align-items-center gap-3">
+          <div className="d-flex align-items-center gap-4">
             {isAuthenticated ? (
-              <>
-                <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-dark hover-opacity">
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: '#e50914',
-                      color: '#fff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: '600',
-                      fontSize: '14px',
-                    }}
-                  >
-                    {(user?.fullName || user?.username || 'U').charAt(0).toUpperCase()}
-                  </div>
-                  <span className="small text-secondary d-none d-sm-inline">
-                    {user?.fullName || user?.username}
-                  </span>
+              <Link to="/history" className="text-secondary text-decoration-none">
+                🎬 {t('myTickets')}
+              </Link>
+            ) : null}
+
+            {isAuthenticated ? (
+              <div className="d-flex align-items-center gap-2">
+                <Link to="/profile" className="fw-bold text-danger text-decoration-none">
+                  {t('hi')}, {user?.fullName || user?.username}
                 </Link>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
+                <button
                   onClick={handleLogout}
-                  className="px-3 py-1"
+                  className="btn btn-link p-0 text-secondary small text-decoration-none ms-2"
                 >
-                  Đăng Xuất
-                </Button>
-              </>
+                  [{t('logout')}]
+                </button>
+              </div>
             ) : (
-              <>
-                <Button
-                  as={Link}
-                  to="/login"
-                  variant="outline-secondary"
-                  size="sm"
-                  className="px-3 py-1"
-                >
-                  Đăng Nhập
-                </Button>
-                <Button
-                  as={Link}
-                  to="/register"
-                  variant="danger"
-                  size="sm"
-                  className="neon-btn px-4 py-1"
-                >
-                  Đăng Ký
-                </Button>
-              </>
+              <div className="d-flex align-items-center gap-2">
+                <Link to="/login" className="text-danger fw-bold text-decoration-none">
+                  {t('loginRegister')}
+                </Link>
+              </div>
             )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+            {/* Language Switcher VN / EN */}
+            <div className="border-start ps-3 d-flex gap-1 fw-bold small">
+              <button 
+                className={`btn btn-link p-0 text-decoration-none small fw-bold ${lang === 'vi' ? 'text-danger' : 'text-secondary'}`}
+                onClick={() => setLang('vi')}
+              >
+                VN
+              </button>
+              <span className="text-muted">|</span>
+              <button 
+                className={`btn btn-link p-0 text-decoration-none small fw-bold ${lang === 'en' ? 'text-danger' : 'text-secondary'}`}
+                onClick={() => setLang('en')}
+              >
+                EN
+              </button>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      {/* Perforated Red Filmstrip Line Top */}
+      <div className="film-strip-border"></div>
+
+      {/* Main CINEMAX Navbar */}
+      <Navbar collapseOnSelect expand="lg" className="cinemax-main-navbar py-2">
+        <Container>
+          <Navbar.Brand as={Link} to="/" className="cinemax-logo-text me-4">
+            CINE<span className="text-gold">MAX</span><span className="cinemax-logo-star">✳</span>
+          </Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="cinemax-navbar-nav" />
+
+          <Navbar.Collapse id="cinemax-navbar-nav">
+            <Nav className="me-auto align-items-center gap-3">
+              {/* PHIM Dropdown */}
+              <NavDropdown 
+                title={t('movies')} 
+                id="cinemax-movies-dropdown"
+                className="cinemax-dropdown-nav"
+              >
+                <NavDropdown.Item as={Link} to="/?status=NOW_SHOWING" className="fw-bold py-2">
+                  🎬 {t('nowShowing')}
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/?status=COMING_SOON" className="fw-bold py-2">
+                  🍿 {t('comingSoon')}
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              <Nav.Link as={NavLink} to="/theaters" className="cinemax-nav-link">
+                {t('theaters')}
+              </Nav.Link>
+
+              <Nav.Link as={NavLink} to={isAuthenticated ? "/profile" : "/login"} className="cinemax-nav-link">
+                {t('membership')}
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* Perforated Red Filmstrip Line Bottom */}
+      <div className="film-strip-border"></div>
+    </header>
   )
 }
 
