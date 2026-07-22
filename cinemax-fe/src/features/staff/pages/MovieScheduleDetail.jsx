@@ -47,19 +47,19 @@ const statusLabels = {
 };
 
 function groupByDate(schedules) {
-  const schedulesByDate = {};
+  const schedulesByDate = new Map();
 
   for (const schedule of schedules) {
     const date = toDatePart(schedule.startTime);
 
-    if (schedulesByDate[date] === undefined) {
-      schedulesByDate[date] = [];
+    if (!schedulesByDate.has(date)) {
+      schedulesByDate.set(date, []);
     }
 
-    schedulesByDate[date].push(schedule);
+    schedulesByDate.get(date).push(schedule);
   }
 
-  return Object.entries(schedulesByDate);
+  return Array.from(schedulesByDate);
 }
 const emptyForm = { date: "", startTime: "", roomId: "" };
 

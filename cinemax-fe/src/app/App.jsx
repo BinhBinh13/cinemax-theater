@@ -16,12 +16,18 @@ import FoodDrinkListPage from "@/features/staff/pages/FoodDrinkListPage";
 import RoomListPage from "@/features/staff/pages/RoomListPage";
 import RoomDetailPage from "@/features/staff/pages/RoomDetailPage";
 import StaffProfilePage from "@/features/staff/pages/StaffProfilePage";
+import AdminUserManagement from "@/features/admin/pages/AdminUserManagement";
 
 const CustomerRoute = ({ children }) => {
   const { isAuthenticated, hasRole } = useAuth();
 
-  if (isAuthenticated && hasRole("STAFF")) {
-    return <Navigate to="/staff/movies" replace />;
+  if (isAuthenticated) {
+    if (hasRole("ADMIN")) {
+      return <Navigate to="/admin/users" replace />;
+    }
+    if (hasRole("STAFF")) {
+      return <Navigate to="/staff/movies" replace />;
+    }
   }
 
   return children;
@@ -154,6 +160,17 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["STAFF", "ADMIN"]}>
             <StaffProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Protected Admin Routes (Only ADMIN role) */}
+      <Route path="/admin" element={<Navigate to="/admin/users" replace />} />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={["ADMIN"]}>
+            <AdminUserManagement />
           </ProtectedRoute>
         }
       />

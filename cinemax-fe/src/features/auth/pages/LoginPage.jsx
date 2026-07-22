@@ -43,13 +43,14 @@ const LoginPage = () => {
         return
       }
 
-      // Redirect based on roles
+      // Redirect based on roles (ADMIN takes priority over STAFF)
       const roles = loggedInUser.roles || []
-      const isStaffOrAdmin = roles.some(role =>
-        role.toUpperCase() === 'ROLE_STAFF' || role.toUpperCase() === 'ROLE_ADMIN'
-      )
+      const isAdmin = roles.some(role => role.toUpperCase() === 'ROLE_ADMIN' || role.toUpperCase() === 'ADMIN')
+      const isStaff = roles.some(role => role.toUpperCase() === 'ROLE_STAFF' || role.toUpperCase() === 'STAFF')
 
-      if (isStaffOrAdmin) {
+      if (isAdmin) {
+        navigate('/admin/users', { replace: true })
+      } else if (isStaff) {
         navigate('/staff/movies', { replace: true })
       } else {
         navigate('/', { replace: true })

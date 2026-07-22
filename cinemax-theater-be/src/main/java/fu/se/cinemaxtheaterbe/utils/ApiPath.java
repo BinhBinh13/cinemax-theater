@@ -7,4 +7,5 @@ public class ApiPath {
     public static final String FOOD_DRINKS = BASE + "/food-drinks";
     public static final String ROOMS = BASE + "/rooms";
     public static final String BOOKINGS = BASE + "/bookings";
+    public static final String USERS = BASE + "/users";
 }

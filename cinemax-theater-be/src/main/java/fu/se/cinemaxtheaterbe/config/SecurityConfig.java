@@ -67,6 +67,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         // Restrict sensitive endpoints to STAFF or ADMIN roles
                         .requestMatchers("/api/v1/staff/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/movies/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/movies/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/movies/**").hasAnyRole("STAFF", "ADMIN")
